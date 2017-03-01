@@ -1,0 +1,17 @@
+include ~/toolsets/gas/gas-app.hsl
+
+local var sources type list;
+local var includes type list;
+local var cflags type list;
+local var libraries type list;
+local var ldflags type list;
+
+project life : toolset "gas-app" : $sources, $includes, $cflags, $libraries, $ldflags, "life";
+
+life.prologue() {
+    $includes = hefesto.sys.get_option("includes");
+    $cflags = hefesto.sys.get_option("cflags");
+    $libraries = hefesto.sys.get_option("libraries");
+    $ldflags = hefesto.sys.get_option("ldflags");
+    $sources.ls(".*\\.s$");
+}

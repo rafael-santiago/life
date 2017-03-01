@@ -1,0 +1,343 @@
+.section .data
+cells:
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+
+alive_fmt:
+    .asciz "\033[41m \033[m\r"
+
+dead_fmt:
+    .asciz "\033[40m \033[m\r"
+
+gotoxy_fmt:
+    .asciz "\033[%d;%dH"
+
+clrscr_fmt:
+    .asciz "\033[2J"
+
+newline_fmt:
+    .asciz "\n"
+
+test:
+    .asciz "Result: %d\n"
+
+dead_cell_nr:
+    .int 0
+
+alive_cell_nr:
+    .int 0
+
+.section .text
+
+.globl _start
+
+_start:
+
+    call clrscr
+
+    call life
+
+    pushl $0
+    call exit
+
+.type life, @function
+life:
+    pushl %ebp
+    movl %esp, %ebp
+
+    call genprint
+
+    movl $0, %eax
+    movl $0, %ebx
+    call applyrules
+
+    movl %ebp, %esp
+    popl %ebp
+ret
+
+.type clrscr, @function
+clrscr: # clrscr()
+    pushl %ebp
+    movl %esp, %ebp
+
+    pushl $clrscr_fmt
+    call printf
+    addl $4, %esp
+
+    movl $1, %eax
+    movl $2, %ebx
+
+    call gotoxy
+
+    movl %ebp, %esp
+    popl %ebp
+ret
+
+.type gotoxy, @function
+gotoxy: # gotoxy(%eax, %ebx)
+    pushl %ebp
+    movl %esp, %ebp
+
+    pushl %eax
+    pushl %ebx
+    pushl $gotoxy_fmt
+    call printf
+    addl $12, %esp
+
+    movl %ebp, %esp
+    popl %ebp
+ret
+
+.type genprint, @function
+genprint: # genprint()
+    #
+    # %eax and %ebx stores the x, y coordinates used on gotoxy() call
+    # %ecx holds the base offset of "cells" (a.k.a row index -> cells[][y]...)
+    # %edi holds the col index of "cells" cells[x][]...
+    # %edx holds the current byte stored in cell[x][y]...
+    #
+    pushl %ebp
+    movl %esp, %ebp
+
+    movl $0, %ecx
+    movl $2, %ebx
+
+    rloop:
+        movl $0, %edi
+        movl $1, %eax
+
+        cloop:
+            movl cells(%ecx, %edi, 1), %edx
+
+            pushl %eax
+            pushl %ebx
+            pushl %ecx
+            pushl %edx
+            pushl %edi
+
+            cmp $1, %dl
+            je push_alive
+
+            pushl $dead_fmt
+            jmp cellprint
+
+            push_alive:
+                pushl $alive_fmt
+
+            cellprint:
+                call gotoxy
+
+            call printf
+            addl $4, %esp
+
+            popl %edi
+            popl %edx
+            popl %ecx
+            popl %ebx
+            popl %eax
+
+            inc %edi
+            inc %eax
+            cmp $20, %edi
+        jne cloop
+
+        pushl %eax
+        pushl %ebx
+        pushl %ecx
+        pushl %edx
+        pushl %edi
+
+        pushl $newline_fmt
+        call printf
+        addl $4, %esp
+
+        popl %edi
+        popl %edx
+        popl %ecx
+        popl %ebx
+        popl %eax
+
+        addl $20, %ecx
+        inc %ebx
+        cmp $400, %ecx
+    jne rloop
+
+    movl %ebp, %esp
+    popl %ebp
+ret
+
+.type applyrules, @function
+applyrules: # applyrules(%eax, %ebx)
+    pushl %ebp
+    movl %esp, %ebp
+    pushl %eax
+    pushl %ebx
+    pushl %edi
+
+    imul $20, %eax
+    movl %ebx, %edi
+
+    call countneighbors
+
+    movl cells(%eax, %edi, 1), %ebx
+    cmp $1, %bl
+    jne deadcell_rules
+
+    alivecell_rules:
+
+    deadcell_rules:
+
+
+    popl %edi
+    popl %ebx
+    popl %eax
+    movl %ebp, %esp
+    popl %ebp
+ret
+
+.type countneighbors, @function
+countneighbors: # countneighbors(%eax, %ebx)
+    pushl %ebp
+    movl %esp, %ebp
+    pushl %eax
+    pushl %ebx
+    pushl %edx
+
+    imul $20, %eax
+    movl %ebx, %edi
+
+    movl $0, %edx
+    movl $20, %ebx
+
+    # INFO(Rafael): Watching the state of cells[r+1][c]
+
+    pushl %eax
+    pushl %edi
+
+    inc %eax
+    idiv %ebx
+
+    movl cells(%edx, %edi, 1), %eax
+    cmp $1, %al
+    jne inc_dead_cell_nr0
+
+    inc_alive_cell_nr0:
+        movl alive_cell_nr, %eax
+        inc %eax
+        movl %eax, alive_cell_nr
+        jmp rule_r1c_end
+
+    inc_dead_cell_nr0:
+        movl dead_cell_nr, %eax
+        inc %eax
+        movl %eax, dead_cell_nr
+
+    rule_r1c_end:
+        popl %edi
+        popl %eax
+
+    # INFO(Rafael): Watching the state of cells[r-1][c]
+
+    pushl %eax
+    pushl %edi
+
+    dec %eax
+    jne non_zero
+    movl $20, %eax
+
+    non_zero:
+        movl cells(%edx, %edi, 1), %eax
+        cmp $1, %al
+        jne inc_dead_cell_nr1
+
+    inc_alive_cell_nr1:
+        movl alive_cell_nr, %eax
+        inc %eax
+        movl %eax, alive_cell_nr
+        jmp rule_r_1c_end
+
+    inc_dead_cell_nr1:
+        movl dead_cell_nr, %eax
+        inc %eax
+        movl %eax, dead_cell_nr
+
+    rule_r_1c_end:
+        popl %edi
+        popl %eax
+
+    # INFO(Rafael): Watching the state of cells[r][c+1]
+
+    pushl %eax
+    pushl %edi
+
+    movl %edi, %eax
+    movl $0, %edx
+
+    inc %eax
+    idiv %ebx
+    movl %eax, %edi
+
+    movl cells(%edx, %edi, 1), %eax
+    cmp $1, %al
+    jne inc_dead_cell_nr2
+
+    inc_alive_cell_nr2:
+        movl alive_cell_nr, %eax
+        inc %eax
+        movl %eax, alive_cell_nr
+        jmp rule_r_c1_end
+
+    inc_dead_cell_nr2:
+        movl dead_cell_nr, %eax
+        inc %eax
+        movl %eax, dead_cell_nr
+
+    rule_r_c1_end:
+        popl %edi
+        popl %eax
+
+    # INFO(Rafael): Watching the state of cells[r][c-1]
+
+    pushl %eax
+    pushl %edi
+
+    # TODO...
+
+    rule_r_c_1_end:
+        popl %edi
+        popl %eax
+
+#    movl $22, %eax
+#    movl $0, %edx
+#    movl $20, %ebx
+#    divl %ebx
+
+#    pushl %edx
+#    pushl $test
+#    call printf
+#    addl $8, %esp
+
+    popl %edx
+    popl %ebx
+    popl %eax
+    movl %ebp, %esp
+    popl %ebp
+ret
