@@ -110,8 +110,8 @@ ret
 genprint: # genprint()
     #
     # %eax and %ebx stores the x, y coordinates used on gotoxy() call
-    # %ecx holds the base offset of "cells" (a.k.a row index -> cells[][y]...)
-    # %edi holds the col index of "cells" cells[x][]...
+    # %ecx holds the base offset of "cells" (a.k.a row index -> cells[x][]...)
+    # %edi holds the col index of "cells" cells[][y]...
     # %edx holds the current byte stored in cell[x][y]...
     #
     pushl %ebp
@@ -259,11 +259,16 @@ countneighbors: # countneighbors(%eax, %ebx)
     pushl %eax
     pushl %edi
 
-    dec %eax
-    jne non_zero
-    movl $20, %eax
+    cmp $0, %eax
+    jne non_zero1
 
-    non_zero:
+    movl $19, %eax
+    jmp inspect_cell1
+
+    non_zero1:
+        dec %eax
+
+    inspect_cell1:
         movl cells(%edx, %edi, 1), %eax
         cmp $1, %al
         jne inc_dead_cell_nr1
@@ -319,11 +324,42 @@ countneighbors: # countneighbors(%eax, %ebx)
     pushl %eax
     pushl %edi
 
-    # TODO...
+    cmp $0, %edi
+    jne non_zero3
+
+    movl $19, %edi
+    jmp inspect_cell3
+
+    non_zero3:
+        dec %esi
+
+    inspect_cell3:
+        movl cells(%eax, %edi, 1), %eax
+        cmp $1, %al
+        jne inc_dead_cell_nr3
+
+    inc_alive_cell_nr3:
+        movl alive_cell_nr, %eax
+        inc %eax
+        movl %eax, alive_cell_nr
+        jmp rule_r_c_1_end
+
+    inc_dead_cell_nr3:
+        movl dead_cell_nr, %eax
+        inc %eax
+        movl %eax, dead_cell_nr
 
     rule_r_c_1_end:
         popl %edi
         popl %eax
+
+    # TODO(Rafael): Watching the state of cells[r-1][c-1]
+
+    # TODO(Rafael): Watching the state of cells[r-1][c+1]
+
+    # TODO(Rafael): Watching the state of cells[r+1][c-1]
+
+    # TODO(Rafael): Watching the state of cells[r+1][c+1]
 
 #    movl $22, %eax
 #    movl $0, %edx
