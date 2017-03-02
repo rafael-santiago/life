@@ -74,7 +74,7 @@ life:
 ret
 
 .type clrscr, @function
-clrscr: # clrscr()
+clrscr: /* clrscr() */
     pushl %ebp
     movl %esp, %ebp
 
@@ -92,7 +92,7 @@ clrscr: # clrscr()
 ret
 
 .type gotoxy, @function
-gotoxy: # gotoxy(%eax, %ebx)
+gotoxy: /* gotoxy(EAX, EBX) */
     pushl %ebp
     movl %esp, %ebp
 
@@ -107,13 +107,18 @@ gotoxy: # gotoxy(%eax, %ebx)
 ret
 
 .type genprint, @function
-genprint: # genprint()
-    #
-    # %eax and %ebx stores the x, y coordinates used on gotoxy() call
-    # %ecx holds the base offset of "cells" (a.k.a row index -> cells[x][]...)
-    # %edi holds the col index of "cells" cells[][y]...
-    # %edx holds the current byte stored in cell[x][y]...
-    #
+genprint: /* genprint() */
+    /*
+     * INFO(Rafael): Well, it prints one generation.
+     *
+     * During its execution...
+     *
+     * EAX and EBX store the x, y coordinates used on gotoxy() calls
+     * ECX holds the base offset of "cells" (a.k.a row index -> cells[][y]...)
+     * EDI holds the col index of "cells" cells[x][]...
+     * EDX holds the current byte stored in cell[x][y]...
+     *
+     */
     pushl %ebp
     movl %esp, %ebp
 
@@ -185,17 +190,22 @@ genprint: # genprint()
 ret
 
 .type applyrules, @function
-applyrules: # applyrules(%eax, %ebx)
+applyrules: /* applyrules(EAX, EBX) */
+    /*
+     * INFO(Rafael): If life sucks to you, I think that you should start from here ;)
+     */
     pushl %ebp
     movl %esp, %ebp
     pushl %eax
     pushl %ebx
     pushl %edi
 
+    /* TODO(Rafael): Traverse the cells inspecting the neighbors of each one and them apply the game rules */
+
     imul $20, %eax
     movl %ebx, %edi
 
-    call countneighbors
+    call inspectneighborhood
 
     movl cells(%eax, %edi, 1), %ebx
     cmp $1, %bl
@@ -213,8 +223,19 @@ applyrules: # applyrules(%eax, %ebx)
     popl %ebp
 ret
 
-.type countneighbors, @function
-countneighbors: # countneighbors(%eax, %ebx)
+.type inspectneighborhood, @function
+inspectneighborhood: /* inspectneighborhood(EAX, EBX) */
+    /*
+     * INFO(Rafael): Given a "high level" coordinate [ E.g.: cells(0;15) ]...
+     *
+     * ...this function will inspect the neighbors of the related cell, getting the amount of
+     * dead and alive cells. When calling this function, the EAX register must hold the
+     * "y" and the EBX the "x".
+     *                                          T T T
+     * This game defines your neighborhood as:  T U T
+     *                                          T T T
+     */
+
     pushl %ebp
     movl %esp, %ebp
     pushl %eax
@@ -227,7 +248,7 @@ countneighbors: # countneighbors(%eax, %ebx)
     movl $0, %edx
     movl $20, %ebx
 
-    # INFO(Rafael): Inspecting the state of cells[r+1][c]
+    /* INFO(Rafael): Inspecting the state of cells[r+1][c] */
 
     pushl %eax
     pushl %edi
@@ -254,7 +275,7 @@ countneighbors: # countneighbors(%eax, %ebx)
         popl %edi
         popl %eax
 
-    # INFO(Rafael): Inspecting the state of cells[r-1][c]
+    /* INFO(Rafael): Inspecting the state of cells[r-1][c] */
 
     pushl %eax
     pushl %edi
@@ -288,7 +309,7 @@ countneighbors: # countneighbors(%eax, %ebx)
         popl %edi
         popl %eax
 
-    # INFO(Rafael): Inspecting the state of cells[r][c+1]
+    /* INFO(Rafael): Inspecting the state of cells[r][c+1] */
 
     pushl %eax
     pushl %edi
@@ -323,7 +344,7 @@ countneighbors: # countneighbors(%eax, %ebx)
         popl %edi
         popl %eax
 
-    # INFO(Rafael): Inspecting the state of cells[r][c-1]
+    /* INFO(Rafael): Inspecting the state of cells[r][c-1] */
 
     pushl %eax
     pushl %edi
@@ -357,7 +378,7 @@ countneighbors: # countneighbors(%eax, %ebx)
         popl %edi
         popl %eax
 
-    # INFO(Rafael): Inspecting the state of cells[r-1][c-1]
+    /* INFO(Rafael): Inspecting the state of cells[r-1][c-1] */
 
     pushl %eax
     pushl %edi
@@ -399,7 +420,7 @@ countneighbors: # countneighbors(%eax, %ebx)
         popl %edi
         popl %eax
 
-    # INFO(Rafael): Inspecting the state of cells[r-1][c+1]
+    /* INFO(Rafael): Inspecting the state of cells[r-1][c+1] */
 
     pushl %eax
     pushl %edi
@@ -443,7 +464,7 @@ countneighbors: # countneighbors(%eax, %ebx)
         popl %edi
         popl %eax
 
-    # INFO(Rafael): Inspecting the state of cells[r+1][c-1]
+    /* INFO(Rafael): Inspecting the state of cells[r+1][c-1] */
 
     pushl %eax
     pushl %edi
@@ -481,7 +502,7 @@ countneighbors: # countneighbors(%eax, %ebx)
         popl %edi
         popl %eax
 
-    # INFO(Rafael): Inspecting the state of cells[r+1][c+1]
+    /* INFO(Rafael): Inspecting the state of cells[r+1][c+1] */
 
     pushl %eax
     pushl %edi
@@ -527,7 +548,7 @@ countneighbors: # countneighbors(%eax, %ebx)
     movl %ebp, %esp
     popl %ebp
 ret
-
+/*
 #    movl $22, %eax
 #    movl $0, %edx
 #    movl $20, %ebx
@@ -555,3 +576,4 @@ ret
 #    movl $0, %edx
 #
 ####
+*/
