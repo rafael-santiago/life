@@ -237,15 +237,15 @@ countneighbors: # countneighbors(%eax, %ebx)
 
     movl cells(%edx, %edi, 1), %eax
     cmp $1, %al
-    jne inc_dead_cell_nr0
+    jne inc_dead_cell_nr.0
 
-    inc_alive_cell_nr0:
+    inc_alive_cell_nr.0:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
         jmp rule_r1c_end
 
-    inc_dead_cell_nr0:
+    inc_dead_cell_nr.0:
         movl dead_cell_nr, %eax
         inc %eax
         movl %eax, dead_cell_nr
@@ -260,26 +260,26 @@ countneighbors: # countneighbors(%eax, %ebx)
     pushl %edi
 
     cmp $0, %eax
-    jne non_zero1
+    jne non_zero.1
 
     movl $19, %eax
-    jmp inspect_cell1
+    jmp inspect_cell.1
 
-    non_zero1:
+    non_zero.1:
         dec %eax
 
-    inspect_cell1:
+    inspect_cell.1:
         movl cells(%edx, %edi, 1), %eax
         cmp $1, %al
-        jne inc_dead_cell_nr1
+        jne inc_dead_cell_nr.1
 
-    inc_alive_cell_nr1:
+    inc_alive_cell_nr.1:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
         jmp rule_r_1c_end
 
-    inc_dead_cell_nr1:
+    inc_dead_cell_nr.1:
         movl dead_cell_nr, %eax
         inc %eax
         movl %eax, dead_cell_nr
@@ -293,24 +293,28 @@ countneighbors: # countneighbors(%eax, %ebx)
     pushl %eax
     pushl %edi
 
+    pushl %eax
+
     movl %edi, %eax
     movl $0, %edx
 
     inc %eax
     idiv %ebx
-    movl %eax, %edi
+    movl %edx, %edi
 
-    movl cells(%edx, %edi, 1), %eax
+    popl %eax
+
+    movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
-    jne inc_dead_cell_nr2
+    jne inc_dead_cell_nr.2
 
-    inc_alive_cell_nr2:
+    inc_alive_cell_nr.2:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
         jmp rule_r_c1_end
 
-    inc_dead_cell_nr2:
+    inc_dead_cell_nr.2:
         movl dead_cell_nr, %eax
         inc %eax
         movl %eax, dead_cell_nr
@@ -325,26 +329,26 @@ countneighbors: # countneighbors(%eax, %ebx)
     pushl %edi
 
     cmp $0, %edi
-    jne non_zero3
+    jne non_zero.3
 
     movl $19, %edi
-    jmp inspect_cell3
+    jmp inspect_cell.3
 
-    non_zero3:
+    non_zero.3:
         dec %esi
 
-    inspect_cell3:
+    inspect_cell.3:
         movl cells(%eax, %edi, 1), %eax
         cmp $1, %al
-        jne inc_dead_cell_nr3
+        jne inc_dead_cell_nr.3
 
-    inc_alive_cell_nr3:
+    inc_alive_cell_nr.3:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
         jmp rule_r_c_1_end
 
-    inc_dead_cell_nr3:
+    inc_dead_cell_nr.3:
         movl dead_cell_nr, %eax
         inc %eax
         movl %eax, dead_cell_nr
@@ -359,34 +363,34 @@ countneighbors: # countneighbors(%eax, %ebx)
     pushl %edi
 
     cmp $0, %eax
-    jne non_zero_40
+    jne non_zero.4.0
     movl $19, %eax
-    jmp dec_edi_4
+    jmp dec_edi.4
 
-    non_zero_40:
+    non_zero.4.0:
         dec %eax
 
-    dec_edi_4:
+    dec_edi.4:
         cmp $0, %edi
-        jne non_zero_41
+        jne non_zero.4.1
         movl $19, %edi
-        jmp inspect_cell4
+        jmp inspect_cell.4
 
-    non_zero_41:
+    non_zero.4.1:
         dec %edi
 
-    inspect_cell4:
+    inspect_cell.4:
         movl cells(%eax, %edi, 1), %eax
         cmp $1, %al
-        jne inc_dead_cell_nr4
+        jne inc_dead_cell_nr.4
 
-    inc_alive_cell_nr4:
+    inc_alive_cell_nr.4:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
         jmp rule_r_1_c_1_end
 
-    inc_dead_cell_nr4:
+    inc_dead_cell_nr.4:
         movl dead_cell_nr, %eax
         inc %eax
         movl %eax, dead_cell_nr
@@ -401,14 +405,14 @@ countneighbors: # countneighbors(%eax, %ebx)
     pushl %edi
 
     cmp $0, %eax
-    jne non_zero_5
+    jne non_zero.5
     movl $19, %eax
-    jmp inc_edi_5
+    jmp inc_edi.5
 
-    non_zero_5:
+    non_zero.5:
         dec %eax
 
-    inc_edi_5:
+    inc_edi.5:
         pushl %eax
 
         movl %edi, %eax
@@ -416,21 +420,21 @@ countneighbors: # countneighbors(%eax, %ebx)
 
         inc %eax
         idiv %ebx
-        movl %eax, %edi
+        movl %edx, %edi
 
         popl %eax
 
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
-    jne inc_dead_cell_nr5
+    jne inc_dead_cell_nr.5
 
-    inc_alive_cell_nr5:
+    inc_alive_cell_nr.5:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
         jmp rule_r_1_c1_end
 
-    inc_dead_cell_nr5:
+    inc_dead_cell_nr.5:
         movl dead_cell_nr, %eax
         inc %eax
         movl %eax, dead_cell_nr
@@ -447,27 +451,28 @@ countneighbors: # countneighbors(%eax, %ebx)
     movl $0, %edx
     inc %eax
     idiv %ebx
+    movl %edx, %eax
 
     cmp $0, %edi
-    jne non_zero6
+    jne non_zero.6
     movl $19, %edi
-    jmp inspect_cell6
+    jmp inspect_cell.6
 
-    non_zero6:
+    non_zero.6:
         dec %edi
 
-    inspect_cell6:
+    inspect_cell.6:
         movl cells(%eax, %edi, 1), %eax
         cmp $1, %al
-        jne inc_dead_cell_nr6
+        jne inc_dead_cell_nr.6
 
-    inc_alive_cell_nr6:
+    inc_alive_cell_nr.6:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
         jmp rule_r1_c_1_end
 
-    inc_dead_cell_nr6:
+    inc_dead_cell_nr.6:
         movl dead_cell_nr, %eax
         inc %eax
         movl %eax, dead_cell_nr
@@ -484,6 +489,7 @@ countneighbors: # countneighbors(%eax, %ebx)
     movl $0, %edx
     inc %eax
     idiv %ebx
+    movl %edx, %eax
 
     pushl %eax
 
@@ -492,21 +498,21 @@ countneighbors: # countneighbors(%eax, %ebx)
 
     inc %eax
     idiv %ebx
-    movl %eax, %edi
+    movl %edx, %edi
 
     popl %eax
 
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
-    jne inc_dead_cell_nr7
+    jne inc_dead_cell_nr.7
 
-    inc_alive_cell_nr7:
+    inc_alive_cell_nr.7:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
         jmp rule_r1_c1_end
 
-    inc_dead_cell_nr7:
+    inc_dead_cell_nr.7:
         movl dead_cell_nr, %eax
         inc %eax
         movl %eax, dead_cell_nr
@@ -532,3 +538,20 @@ ret
 #    call printf
 #    addl $8, %esp
 
+####
+#
+#    pushl %eax
+#
+#    movl $41, %eax
+#    idiv %ebx
+#
+#    pushl %edx
+#    pushl $test
+#    call printf
+#    addl $8, %esp
+#
+#    popl %eax
+#
+#    movl $0, %edx
+#
+####
