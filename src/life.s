@@ -233,7 +233,7 @@ ret
 .type inspectneighborhood, @function
 inspectneighborhood: /* inspectneighborhood(EAX, EBX) */
     /*
-     * INFO(Rafael): Given a "high level" coordinate [ E.g.: cells(0;15) ]...
+     * INFO(Rafael): Given a "high level" coordinate [ E.g.: cells(1;1) ]...
      *
      * ...this function will inspect the neighbors of the related cell, getting the amount of
      * dead and alive cells. When calling this function, the EAX register must hold the
