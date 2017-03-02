@@ -207,7 +207,7 @@ applyrules: /* applyrules(EAX, EBX) */
     pushl %ebx
     pushl %edi
 
-    /* TODO(Rafael): Traverse the cells inspecting the neighbors of each one and them apply the game rules */
+    /* TODO(Rafael): Traverse the cells inspecting the neighbors of each one and then apply the game rules */
 
     imul $20, %eax
     movl %ebx, %edi
@@ -252,8 +252,10 @@ inspectneighborhood: /* inspectneighborhood(EAX, EBX) */
     imul $20, %eax
     movl %ebx, %edi
 
-    movl $0, %edx
     movl $20, %ebx
+    movl $0, %edx
+    movl %edx, alive_cell_nr
+    movl %edx, dead_cell_nr
 
     /* INFO(Rafael): Inspecting the state of cells[r+1][c] */
 
