@@ -227,7 +227,7 @@ countneighbors: # countneighbors(%eax, %ebx)
     movl $0, %edx
     movl $20, %ebx
 
-    # INFO(Rafael): Watching the state of cells[r+1][c]
+    # INFO(Rafael): Inspecting the state of cells[r+1][c]
 
     pushl %eax
     pushl %edi
@@ -254,7 +254,7 @@ countneighbors: # countneighbors(%eax, %ebx)
         popl %edi
         popl %eax
 
-    # INFO(Rafael): Watching the state of cells[r-1][c]
+    # INFO(Rafael): Inspecting the state of cells[r-1][c]
 
     pushl %eax
     pushl %edi
@@ -288,7 +288,7 @@ countneighbors: # countneighbors(%eax, %ebx)
         popl %edi
         popl %eax
 
-    # INFO(Rafael): Watching the state of cells[r][c+1]
+    # INFO(Rafael): Inspecting the state of cells[r][c+1]
 
     pushl %eax
     pushl %edi
@@ -319,7 +319,7 @@ countneighbors: # countneighbors(%eax, %ebx)
         popl %edi
         popl %eax
 
-    # INFO(Rafael): Watching the state of cells[r][c-1]
+    # INFO(Rafael): Inspecting the state of cells[r][c-1]
 
     pushl %eax
     pushl %edi
@@ -353,13 +353,174 @@ countneighbors: # countneighbors(%eax, %ebx)
         popl %edi
         popl %eax
 
-    # TODO(Rafael): Watching the state of cells[r-1][c-1]
+    # INFO(Rafael): Inspecting the state of cells[r-1][c-1]
 
-    # TODO(Rafael): Watching the state of cells[r-1][c+1]
+    pushl %eax
+    pushl %edi
 
-    # TODO(Rafael): Watching the state of cells[r+1][c-1]
+    cmp $0, %eax
+    jne non_zero_40
+    movl $19, %eax
+    jmp dec_edi_4
 
-    # TODO(Rafael): Watching the state of cells[r+1][c+1]
+    non_zero_40:
+        dec %eax
+
+    dec_edi_4:
+        cmp $0, %edi
+        jne non_zero_41
+        movl $19, %edi
+        jmp inspect_cell4
+
+    non_zero_41:
+        dec %edi
+
+    inspect_cell4:
+        movl cells(%eax, %edi, 1), %eax
+        cmp $1, %al
+        jne inc_dead_cell_nr4
+
+    inc_alive_cell_nr4:
+        movl alive_cell_nr, %eax
+        inc %eax
+        movl %eax, alive_cell_nr
+        jmp rule_r_1_c_1_end
+
+    inc_dead_cell_nr4:
+        movl dead_cell_nr, %eax
+        inc %eax
+        movl %eax, dead_cell_nr
+
+    rule_r_1_c_1_end:
+        popl %edi
+        popl %eax
+
+    # INFO(Rafael): Inspecting the state of cells[r-1][c+1]
+
+    pushl %eax
+    pushl %edi
+
+    cmp $0, %eax
+    jne non_zero_5
+    movl $19, %eax
+    jmp inc_edi_5
+
+    non_zero_5:
+        dec %eax
+
+    inc_edi_5:
+        pushl %eax
+
+        movl %edi, %eax
+        movl $0, %edx
+
+        inc %eax
+        idiv %ebx
+        movl %eax, %edi
+
+        popl %eax
+
+    movl cells(%eax, %edi, 1), %eax
+    cmp $1, %al
+    jne inc_dead_cell_nr5
+
+    inc_alive_cell_nr5:
+        movl alive_cell_nr, %eax
+        inc %eax
+        movl %eax, alive_cell_nr
+        jmp rule_r_1_c1_end
+
+    inc_dead_cell_nr5:
+        movl dead_cell_nr, %eax
+        inc %eax
+        movl %eax, dead_cell_nr
+
+    rule_r_1_c1_end:
+        popl %edi
+        popl %eax
+
+    # INFO(Rafael): Inspecting the state of cells[r+1][c-1]
+
+    pushl %eax
+    pushl %edi
+
+    movl $0, %edx
+    inc %eax
+    idiv %ebx
+
+    cmp $0, %edi
+    jne non_zero6
+    movl $19, %edi
+    jmp inspect_cell6
+
+    non_zero6:
+        dec %edi
+
+    inspect_cell6:
+        movl cells(%eax, %edi, 1), %eax
+        cmp $1, %al
+        jne inc_dead_cell_nr6
+
+    inc_alive_cell_nr6:
+        movl alive_cell_nr, %eax
+        inc %eax
+        movl %eax, alive_cell_nr
+        jmp rule_r1_c_1_end
+
+    inc_dead_cell_nr6:
+        movl dead_cell_nr, %eax
+        inc %eax
+        movl %eax, dead_cell_nr
+
+    rule_r1_c_1_end:
+        popl %edi
+        popl %eax
+
+    # INFO(Rafael): Inspecting the state of cells[r+1][c+1]
+
+    pushl %eax
+    pushl %edi
+
+    movl $0, %edx
+    inc %eax
+    idiv %ebx
+
+    pushl %eax
+
+    movl %edi, %eax
+    movl $0, %edx
+
+    inc %eax
+    idiv %ebx
+    movl %eax, %edi
+
+    popl %eax
+
+    movl cells(%eax, %edi, 1), %eax
+    cmp $1, %al
+    jne inc_dead_cell_nr7
+
+    inc_alive_cell_nr7:
+        movl alive_cell_nr, %eax
+        inc %eax
+        movl %eax, alive_cell_nr
+        jmp rule_r1_c1_end
+
+    inc_dead_cell_nr7:
+        movl dead_cell_nr, %eax
+        inc %eax
+        movl %eax, dead_cell_nr
+
+    rule_r1_c1_end:
+        popl %edi
+        popl %eax
+
+    popl %edx
+    popl %ebx
+    popl %eax
+    movl %ebp, %esp
+    popl %ebp
+ret
 
 #    movl $22, %eax
 #    movl $0, %edx
@@ -371,9 +532,3 @@ countneighbors: # countneighbors(%eax, %ebx)
 #    call printf
 #    addl $8, %esp
 
-    popl %edx
-    popl %ebx
-    popl %eax
-    movl %ebp, %esp
-    popl %ebp
-ret
