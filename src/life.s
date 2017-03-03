@@ -46,9 +46,6 @@ newline_fmt:
 test:
     .asciz "Result: %d\n"
 
-dead_cell_nr:
-    .int 0
-
 alive_cell_nr:
     .int 0
 
@@ -326,13 +323,11 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
     pushl %ebx
     pushl %edx
 
-    #imul $20, %eax
     movl %ebx, %edi
 
     movl $20, %ebx
     movl $0, %edx
     movl %edx, alive_cell_nr
-    movl %edx, dead_cell_nr
 
     /* INFO(Rafael): Inspecting the state of cells[r+1][c] */
 
@@ -345,18 +340,12 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
     imul $20, %edx
     movl cells(%edx, %edi, 1), %eax
     cmp $1, %al
-    jne inc_dead_cell_nr.0
+    jne rule_r1c_end
 
     inc_alive_cell_nr.0:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
-        jmp rule_r1c_end
-
-    inc_dead_cell_nr.0:
-        movl dead_cell_nr, %eax
-        inc %eax
-        movl %eax, dead_cell_nr
 
     rule_r1c_end:
         popl %edi
@@ -380,18 +369,12 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
         imul $20, %eax
         movl cells(%eax, %edi, 1), %eax
         cmp $1, %al
-        jne inc_dead_cell_nr.1
+        jne rule_r_1c_end
 
     inc_alive_cell_nr.1:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
-        jmp rule_r_1c_end
-
-    inc_dead_cell_nr.1:
-        movl dead_cell_nr, %eax
-        inc %eax
-        movl %eax, dead_cell_nr
 
     rule_r_1c_end:
         popl %edi
@@ -416,18 +399,12 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
     imul $20, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
-    jne inc_dead_cell_nr.2
+    jne rule_r_c1_end
 
     inc_alive_cell_nr.2:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
-        jmp rule_r_c1_end
-
-    inc_dead_cell_nr.2:
-        movl dead_cell_nr, %eax
-        inc %eax
-        movl %eax, dead_cell_nr
 
     rule_r_c1_end:
         popl %edi
@@ -451,18 +428,12 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
         imul $20, %eax
         movl cells(%eax, %edi, 1), %eax
         cmp $1, %al
-        jne inc_dead_cell_nr.3
+        jne rule_r_c_1_end
 
     inc_alive_cell_nr.3:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
-        jmp rule_r_c_1_end
-
-    inc_dead_cell_nr.3:
-        movl dead_cell_nr, %eax
-        inc %eax
-        movl %eax, dead_cell_nr
 
     rule_r_c_1_end:
         popl %edi
@@ -494,18 +465,12 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
         imul $20, %eax
         movl cells(%eax, %edi, 1), %eax
         cmp $1, %al
-        jne inc_dead_cell_nr.4
+        jne rule_r_1_c_1_end
 
     inc_alive_cell_nr.4:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
-        jmp rule_r_1_c_1_end
-
-    inc_dead_cell_nr.4:
-        movl dead_cell_nr, %eax
-        inc %eax
-        movl %eax, dead_cell_nr
 
     rule_r_1_c_1_end:
         popl %edi
@@ -539,18 +504,12 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
     imul $20, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
-    jne inc_dead_cell_nr.5
+    jne rule_r_1_c1_end
 
     inc_alive_cell_nr.5:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
-        jmp rule_r_1_c1_end
-
-    inc_dead_cell_nr.5:
-        movl dead_cell_nr, %eax
-        inc %eax
-        movl %eax, dead_cell_nr
 
     rule_r_1_c1_end:
         popl %edi
@@ -578,18 +537,12 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
         imul $20, %eax
         movl cells(%eax, %edi, 1), %eax
         cmp $1, %al
-        jne inc_dead_cell_nr.6
+        jne rule_r1_c_1_end
 
     inc_alive_cell_nr.6:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
-        jmp rule_r1_c_1_end
-
-    inc_dead_cell_nr.6:
-        movl dead_cell_nr, %eax
-        inc %eax
-        movl %eax, dead_cell_nr
 
     rule_r1_c_1_end:
         popl %edi
@@ -619,18 +572,12 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
     imul $20, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
-    jne inc_dead_cell_nr.7
+    jne rule_r1_c1_end
 
     inc_alive_cell_nr.7:
         movl alive_cell_nr, %eax
         inc %eax
         movl %eax, alive_cell_nr
-        jmp rule_r1_c1_end
-
-    inc_dead_cell_nr.7:
-        movl dead_cell_nr, %eax
-        inc %eax
-        movl %eax, dead_cell_nr
 
     rule_r1_c1_end:
         popl %edi
