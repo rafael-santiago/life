@@ -49,6 +49,18 @@ alive_cell_nr:
 usleep_time:
     .int 200000
 
+cell_row_min:
+    .int 0
+
+cell_row_max:
+    .int 19
+
+cell_col_min:
+    .int 0
+
+cell_col_max:
+    .int 19
+
 .section .text
 
 .globl _start
@@ -133,15 +145,28 @@ genprint: /* genprint() */
     pushl %ebp
     movl %esp, %ebp
 
+    pushl %ecx
+    pushl %esi
+
     movl $0, %ecx
     movl $2, %ebx
+
+    movl cell_col_max, %esi
+    inc %esi
 
     rloop:
         movl $0, %edi
         movl $1, %eax
 
         cloop:
-            movl cells(%ecx, %edi, 1), %edx
+            pushl %eax
+
+            movl cell_row_max, %eax
+            inc %eax
+            imul %ecx, %eax
+            movl cells(%eax, %edi, 1), %edx
+
+            popl %eax
 
             pushl %eax
             pushl %ebx
@@ -172,7 +197,7 @@ genprint: /* genprint() */
 
             inc %edi
             inc %eax
-            cmp $20, %edi
+            cmp %esi, %edi
         jne cloop
 
         pushl %eax
@@ -191,10 +216,18 @@ genprint: /* genprint() */
         popl %ebx
         popl %eax
 
-        addl $20, %ecx
+        inc %ecx
         inc %ebx
-        cmp $400, %ecx
+
+        pushl %eax
+        movl cell_row_max, %eax
+        inc %eax
+        cmp %eax, %ecx
+        popl %eax
     jne rloop
+
+    popl %esi
+    popl %ecx
 
     movl %ebp, %esp
     popl %ebp
@@ -209,12 +242,19 @@ apply_rules: /* applyrules(EAX, EBX) */
     movl %esp, %ebp
     pushl %eax
     pushl %ebx
+    pushl %ecx
     pushl %edx
+    pushl %esi
     pushl %edi
 
     /* INFO(Rafael): Traversing the cells inspecting the neighbours of each one and then apply the game rules */
 
     movl $0, %eax
+
+    movl cell_row_max, %ecx
+    inc %ecx
+    movl cell_col_max, %esi
+    inc %esi
 
     applyrules_rloop:
 
@@ -226,8 +266,9 @@ apply_rules: /* applyrules(EAX, EBX) */
 
             pushl %eax
             movl %ebx, %edi
-            imul $20, %eax
+            imul %ecx, %eax
 
+            pushl %ecx
             movl cells(%eax, %edi, 1), %ecx
 
             movl alive_cell_nr, %edx
@@ -274,18 +315,21 @@ apply_rules: /* applyrules(EAX, EBX) */
             applyrules_cloop_inc:
                 inc %ebx
 
+            popl %ecx
             popl %eax
 
-            cmp $20, %ebx
+            cmp %esi, %ebx
         jne applyrules_cloop
 
         inc %eax
-        cmp $20, %eax
+        cmp %ecx, %eax
     jne applyrules_rloop
 
 
     popl %edi
+    popl %esi
     popl %edx
+    popl %ecx
     popl %ebx
     popl %eax
     movl %ebp, %esp
@@ -313,6 +357,9 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
 
     movl %ebx, %edi
 
+    movl cell_row_max, %edx
+    inc %edx
+
     movl $0, alive_cell_nr
 
     /* INFO(Rafael): Inspecting the state of cells[r+1][c] */
@@ -320,12 +367,12 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
     pushl %eax
     pushl %edi
 
-    cmp $19, %eax
+    cmp cell_row_max, %eax
     je rule_r1c_end
 
     inc %eax
 
-    imul $20, %eax
+    imul %edx, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
     jne rule_r1c_end
@@ -343,12 +390,12 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
     pushl %eax
     pushl %edi
 
-    cmp $0, %eax
+    cmp cell_row_min, %eax
     je rule_r_1c_end
 
     dec %eax
 
-    imul $20, %eax
+    imul %edx, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
     jne rule_r_1c_end
@@ -366,12 +413,12 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
     pushl %eax
     pushl %edi
 
-    cmp $19, %edi
+    cmp cell_col_max, %edi
     je rule_r_c1_end
 
     inc %edi
 
-    imul $20, %eax
+    imul %edx, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
     jne rule_r_c1_end
@@ -389,12 +436,12 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
     pushl %eax
     pushl %edi
 
-    cmp $0, %edi
+    cmp cell_col_min, %edi
     je rule_r_c_1_end
 
     dec %edi
 
-    imul $20, %eax
+    imul %edx, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
     jne rule_r_c_1_end
@@ -412,16 +459,16 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
     pushl %eax
     pushl %edi
 
-    cmp $0, %eax
+    cmp cell_row_min, %eax
     je rule_r_1_c_1_end
 
-    cmp $0, %edi
+    cmp cell_col_min, %edi
     je rule_r_1_c_1_end
 
     dec %eax
     dec %edi
 
-    imul $20, %eax
+    imul %edx, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
     jne rule_r_1_c_1_end
@@ -439,16 +486,16 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
     pushl %eax
     pushl %edi
 
-    cmp $0, %eax
+    cmp cell_row_min, %eax
     je rule_r_1_c1_end
 
-    cmp $19, %edi
+    cmp cell_col_max, %edi
     je rule_r_1_c1_end
 
     dec %eax
     inc %edi
 
-    imul $20, %eax
+    imul %edx, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
     jne rule_r_1_c1_end
@@ -466,16 +513,16 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
     pushl %eax
     pushl %edi
 
-    cmp $19, %eax
+    cmp cell_row_max, %eax
     je rule_r1_c_1_end
 
-    cmp $0, %edi
+    cmp cell_col_min, %edi
     je rule_r1_c_1_end
 
     inc %eax
     dec %edi
 
-    imul $20, %eax
+    imul %edx, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
     jne rule_r1_c_1_end
@@ -493,16 +540,16 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
     pushl %eax
     pushl %edi
 
-    cmp $19, %eax
+    cmp cell_row_max, %eax
     je rule_r1_c1_end
 
-    cmp $19, %edi
+    cmp cell_col_max, %edi
     je rule_r1_c1_end
 
     inc %eax
     inc %edi
 
-    imul $20, %eax
+    imul %edx, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
     jne rule_r1_c1_end
