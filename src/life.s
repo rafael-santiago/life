@@ -43,11 +43,11 @@ clrscr_fmt:
 newline_fmt:
     .asciz "\n"
 
-test:
-    .asciz "Result: %d\n"
-
 alive_cell_nr:
     .int 0
+
+usleep_time:
+    .int 200000
 
 .section .text
 
@@ -72,25 +72,13 @@ life:
 
     gameloop:
         call genprint
-        movl $999999999, %ecx
-        call delay
-        call applyrules
+
+        pushl usleep_time
+        call usleep
+        addl $8, %esp
+
+        call apply_rules
     jmp gameloop
-
-    movl %ebp, %esp
-    popl %ebp
-ret
-
-.type delay, @function
-delay:
-    pushl %ebp
-    movl %esp, %ebp
-
-    wait:
-        dec %ecx
-        nop
-        cmp $0, %ecx
-    jnz wait
 
     movl %ebp, %esp
     popl %ebp
@@ -212,8 +200,8 @@ genprint: /* genprint() */
     popl %ebp
 ret
 
-.type applyrules, @function
-applyrules: /* applyrules(EAX, EBX) */
+.type apply_rules, @function
+apply_rules: /* applyrules(EAX, EBX) */
     /*
      * INFO(Rafael): If life sucks to you, I think that you should start from here ;)
      */
@@ -234,7 +222,7 @@ applyrules: /* applyrules(EAX, EBX) */
 
         applyrules_cloop:
 
-            call inspectneighbourhood
+            call inspect_neighbourhood
 
             pushl %eax
             movl %ebx, %edi
@@ -304,8 +292,8 @@ applyrules: /* applyrules(EAX, EBX) */
     popl %ebp
 ret
 
-.type inspectneighbourhood, @function
-inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
+.type inspect_neighbourhood, @function
+inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
     /*
      * INFO(Rafael): Given a "high level" coordinate [ E.g.: cells(1;1) ]...
      *
@@ -325,27 +313,26 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
 
     movl %ebx, %edi
 
-    movl $20, %ebx
-    movl $0, %edx
-    movl %edx, alive_cell_nr
+    movl $0, alive_cell_nr
 
     /* INFO(Rafael): Inspecting the state of cells[r+1][c] */
 
     pushl %eax
     pushl %edi
 
-    inc %eax
-    idiv %ebx
+    cmp $19, %eax
+    je rule_r1c_end
 
-    imul $20, %edx
-    movl cells(%edx, %edi, 1), %eax
+    inc %eax
+
+    imul $20, %eax
+    movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
     jne rule_r1c_end
 
-    inc_alive_cell_nr.0:
-        movl alive_cell_nr, %eax
-        inc %eax
-        movl %eax, alive_cell_nr
+    movl alive_cell_nr, %eax
+    inc %eax
+    movl %eax, alive_cell_nr
 
     rule_r1c_end:
         popl %edi
@@ -357,24 +344,18 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
     pushl %edi
 
     cmp $0, %eax
-    jne non_zero.1
+    je rule_r_1c_end
 
-    movl $19, %eax
-    jmp inspect_cell.1
+    dec %eax
 
-    non_zero.1:
-        dec %eax
+    imul $20, %eax
+    movl cells(%eax, %edi, 1), %eax
+    cmp $1, %al
+    jne rule_r_1c_end
 
-    inspect_cell.1:
-        imul $20, %eax
-        movl cells(%eax, %edi, 1), %eax
-        cmp $1, %al
-        jne rule_r_1c_end
-
-    inc_alive_cell_nr.1:
-        movl alive_cell_nr, %eax
-        inc %eax
-        movl %eax, alive_cell_nr
+    movl alive_cell_nr, %eax
+    inc %eax
+    movl %eax, alive_cell_nr
 
     rule_r_1c_end:
         popl %edi
@@ -385,26 +366,19 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
     pushl %eax
     pushl %edi
 
-    pushl %eax
+    cmp $19, %edi
+    je rule_r_c1_end
 
-    movl %edi, %eax
-    movl $0, %edx
-
-    inc %eax
-    idiv %ebx
-    movl %edx, %edi
-
-    popl %eax
+    inc %edi
 
     imul $20, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
     jne rule_r_c1_end
 
-    inc_alive_cell_nr.2:
-        movl alive_cell_nr, %eax
-        inc %eax
-        movl %eax, alive_cell_nr
+    movl alive_cell_nr, %eax
+    inc %eax
+    movl %eax, alive_cell_nr
 
     rule_r_c1_end:
         popl %edi
@@ -416,24 +390,18 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
     pushl %edi
 
     cmp $0, %edi
-    jne non_zero.3
+    je rule_r_c_1_end
 
-    movl $19, %edi
-    jmp inspect_cell.3
+    dec %edi
 
-    non_zero.3:
-        dec %edi
+    imul $20, %eax
+    movl cells(%eax, %edi, 1), %eax
+    cmp $1, %al
+    jne rule_r_c_1_end
 
-    inspect_cell.3:
-        imul $20, %eax
-        movl cells(%eax, %edi, 1), %eax
-        cmp $1, %al
-        jne rule_r_c_1_end
-
-    inc_alive_cell_nr.3:
-        movl alive_cell_nr, %eax
-        inc %eax
-        movl %eax, alive_cell_nr
+    movl alive_cell_nr, %eax
+    inc %eax
+    movl %eax, alive_cell_nr
 
     rule_r_c_1_end:
         popl %edi
@@ -445,32 +413,22 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
     pushl %edi
 
     cmp $0, %eax
-    jne non_zero.4.0
-    movl $19, %eax
-    jmp dec_edi.4
+    je rule_r_1_c_1_end
 
-    non_zero.4.0:
-        dec %eax
+    cmp $0, %edi
+    je rule_r_1_c_1_end
 
-    dec_edi.4:
-        cmp $0, %edi
-        jne non_zero.4.1
-        movl $19, %edi
-        jmp inspect_cell.4
+    dec %eax
+    dec %edi
 
-    non_zero.4.1:
-        dec %edi
+    imul $20, %eax
+    movl cells(%eax, %edi, 1), %eax
+    cmp $1, %al
+    jne rule_r_1_c_1_end
 
-    inspect_cell.4:
-        imul $20, %eax
-        movl cells(%eax, %edi, 1), %eax
-        cmp $1, %al
-        jne rule_r_1_c_1_end
-
-    inc_alive_cell_nr.4:
-        movl alive_cell_nr, %eax
-        inc %eax
-        movl %eax, alive_cell_nr
+    movl alive_cell_nr, %eax
+    inc %eax
+    movl %eax, alive_cell_nr
 
     rule_r_1_c_1_end:
         popl %edi
@@ -482,34 +440,22 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
     pushl %edi
 
     cmp $0, %eax
-    jne non_zero.5
-    movl $19, %eax
-    jmp inc_edi.5
+    je rule_r_1_c1_end
 
-    non_zero.5:
-        dec %eax
+    cmp $19, %edi
+    je rule_r_1_c1_end
 
-    inc_edi.5:
-        pushl %eax
-
-        movl %edi, %eax
-        movl $0, %edx
-
-        inc %eax
-        idiv %ebx
-        movl %edx, %edi
-
-        popl %eax
+    dec %eax
+    inc %edi
 
     imul $20, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
     jne rule_r_1_c1_end
 
-    inc_alive_cell_nr.5:
-        movl alive_cell_nr, %eax
-        inc %eax
-        movl %eax, alive_cell_nr
+    movl alive_cell_nr, %eax
+    inc %eax
+    movl %eax, alive_cell_nr
 
     rule_r_1_c1_end:
         popl %edi
@@ -520,29 +466,23 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
     pushl %eax
     pushl %edi
 
-    movl $0, %edx
-    inc %eax
-    idiv %ebx
-    movl %edx, %eax
+    cmp $19, %eax
+    je rule_r1_c_1_end
 
     cmp $0, %edi
-    jne non_zero.6
-    movl $19, %edi
-    jmp inspect_cell.6
+    je rule_r1_c_1_end
 
-    non_zero.6:
-        dec %edi
+    inc %eax
+    dec %edi
 
-    inspect_cell.6:
-        imul $20, %eax
-        movl cells(%eax, %edi, 1), %eax
-        cmp $1, %al
-        jne rule_r1_c_1_end
+    imul $20, %eax
+    movl cells(%eax, %edi, 1), %eax
+    cmp $1, %al
+    jne rule_r1_c_1_end
 
-    inc_alive_cell_nr.6:
-        movl alive_cell_nr, %eax
-        inc %eax
-        movl %eax, alive_cell_nr
+    movl alive_cell_nr, %eax
+    inc %eax
+    movl %eax, alive_cell_nr
 
     rule_r1_c_1_end:
         popl %edi
@@ -553,31 +493,23 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
     pushl %eax
     pushl %edi
 
-    movl $0, %edx
-    inc %eax
-    idiv %ebx
-    movl %edx, %eax
+    cmp $19, %eax
+    je rule_r1_c1_end
 
-    pushl %eax
-
-    movl %edi, %eax
-    movl $0, %edx
+    cmp $19, %edi
+    je rule_r1_c1_end
 
     inc %eax
-    idiv %ebx
-    movl %edx, %edi
-
-    popl %eax
+    inc %edi
 
     imul $20, %eax
     movl cells(%eax, %edi, 1), %eax
     cmp $1, %al
     jne rule_r1_c1_end
 
-    inc_alive_cell_nr.7:
-        movl alive_cell_nr, %eax
-        inc %eax
-        movl %eax, alive_cell_nr
+    movl alive_cell_nr, %eax
+    inc %eax
+    movl %eax, alive_cell_nr
 
     rule_r1_c1_end:
         popl %edi
@@ -589,32 +521,3 @@ inspectneighbourhood: /* inspectneighbourhood(EAX, EBX) */
     movl %ebp, %esp
     popl %ebp
 ret
-/*
-#    movl $22, %eax
-#    movl $0, %edx
-#    movl $20, %ebx
-#    divl %ebx
-
-#    pushl %edx
-#    pushl $test
-#    call printf
-#    addl $8, %esp
-
-####
-#
-#    pushl %eax
-#
-#    movl $41, %eax
-#    idiv %ebx
-#
-#    pushl %edx
-#    pushl $test
-#    call printf
-#    addl $8, %esp
-#
-#    popl %eax
-#
-#    movl $0, %edx
-#
-####
-*/
