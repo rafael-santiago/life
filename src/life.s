@@ -61,18 +61,55 @@ cell_col_min:
 cell_col_max:
     .int 19
 
+sigint_watchdog_fmt:
+    .asciz "Quit.\n"
+
 .section .text
 
 .globl _start
 
 _start:
 
+    /* INFO(Rafael): Not problem on using imediate values for POSIX signals here,
+                     they are standard, any decent UNIX will follow them...
+                     It would be AWESOME if we could or'ing all this shit up. */
+
+    pushl $sigint_watchdog
+    pushl $2
+    call signal
+    addl $8, %esp
+
+    pushl $sigint_watchdog
+    pushl $3
+    call signal
+    addl $8, %esp
+
+    pushl $sigint_watchdog
+    pushl $15
+    call signal
+    addl $8, %esp
+
     call clrscr
 
     call life
 
+.type sigint_watchdog, @function
+sigint_watchdog:
+    /* INFO(Rafael): Tsc... fuck the callstack, the sky is falling here.*/
+
+    /* TODO(Rafael): Bad, it is not a good idea to call printf from this
+                     kind of function. It should be improved on. Maybe a
+                     silly dummy flag holding the main loop. */
+
+    call clrscr
+
+    pushl $sigint_watchdog_fmt
+    call printf
+    addl $4, %ebp
+
     pushl $0
     call exit
+ret
 
 .type life, @function
 life:
