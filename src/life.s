@@ -306,7 +306,7 @@ apply_rules: /* apply_rules(EAX, EBX) */
     pushl %edx
     pushl %esi
 
-    /* INFO(Rafael): Basically it traverses the cells inspecting the neighbours of each one and then applying
+    /* INFO(Rafael): Basically it traverses the cells inspecting the neighbours of each one and then applies
                      the game rules.
 
                      I think that use a kind of "temp_cells", "aux_cells" only to store the next generation data
@@ -403,7 +403,7 @@ apply_rules: /* apply_rules(EAX, EBX) */
         pushl %eax
         imul cell_bytes_per_row, %eax
         apply_rules_cloop.1:
-            shrb $4, cells(%eax, %ebx, 1) /* now let's shift space and time... */
+            shrb $4, cells(%eax, %ebx, 1) /* now step out kids, it will shift space and time... */
             inc %ebx
             cmp %esi, %ebx
         jne apply_rules_cloop.1
