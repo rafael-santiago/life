@@ -139,8 +139,8 @@ life: /* life() */
     pushl %ebp
     movl %esp, %ebp
 
-    movl $0, %eax
-    movl $0, %ebx
+    xorl %eax, %eax
+    xorl %ebx, %ebx
 
     gameloop:
         call genprint
@@ -208,14 +208,14 @@ genprint: /* genprint() */
     pushl %ecx
     pushl %esi
 
-    movl $0, %ecx
+    xorl %ecx, %ecx
     movl $2, %ebx
 
     movl cell_col_max, %esi
     inc %esi
 
     rloop:
-        movl $0, %edi
+        xorl %edi, %edi
         movl $1, %eax
 
         cloop:
