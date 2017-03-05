@@ -8,7 +8,7 @@ This repo is a minimalist implementation of the ``Conway's Game of Life`` in ``I
 Pretty simple:
 
 ```
-you@CraterLake:~/src# git clone https://github.com/rafael-santiago/life life
+you@SilvergunSuperman:~/src# git clone https://github.com/rafael-santiago/life life
 ```
 
 Done.
@@ -23,9 +23,9 @@ all steps to put ``hefesto`` to work on your system, you should "teach" your bui
 ``GNU's Assembler``. You need three commands:
 
 ```
-root@CraterLake:~/src# git clone https://github.com/rafael-santiago/helios
-root@CraterLake:~/src# cd helios
-root@CraterLake:~/src/helios# hefesto --install=gnu-asm-toolset
+root@SilvergunSuperman:~/src# git clone https://github.com/rafael-santiago/helios
+root@SilvergunSuperman:~/src# cd helios
+root@SilvergunSuperman:~/src/helios# hefesto --install=gnu-asm-toolset
 ```
 
 Done.
@@ -33,11 +33,11 @@ Done.
 After doing it your ``hefesto`` copy will know how to handle the assembler that we need. By the way, your
 ``helios`` copy can be removed...
 
-Now, inside your ``life`` copy, move to the ``src`` sub-directory and just call from there ``hefesto``.
+Now, inside your ``life`` copy, move to the ``src`` sub-directory and just call ``hefesto`` from there.
 
 ```
-you@CraterLake:~/src/life# cd src
-you@CraterLake:~/src/life/src# hefesto
+you@SilvergunSuperman:~/src/life# cd src
+you@SilvergunSuperman:~/src/life/src# hefesto
 ```
 
 An ``ELF`` called ``life`` will be created under the current directory and that's it.
@@ -45,7 +45,7 @@ An ``ELF`` called ``life`` will be created under the current directory and that'
 If for some reason you are wanting a debug version of it:
 
 ```
-you@CraterLake:~/src/life/src# hefesto --compile-model=debug
+you@SilvergunSuperman:~/src/life/src# hefesto --compile-model=debug
 ```
 
 ...and good luck! ;)
