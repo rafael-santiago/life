@@ -206,13 +206,9 @@ genprint: /* genprint() */
     movl %esp, %ebp
 
     pushl %ecx
-    pushl %esi
 
     xorl %ecx, %ecx
     movl $2, %ebx
-
-    movl cell_col_max, %esi
-    inc %esi
 
     rloop:
         xorl %edi, %edi
@@ -257,8 +253,8 @@ genprint: /* genprint() */
 
             inc %edi
             inc %eax
-            cmp %esi, %edi
-        jne cloop
+            cmp cell_col_max, %edi
+        jle cloop
 
         pushl %eax
         pushl %ebx
@@ -279,14 +275,9 @@ genprint: /* genprint() */
         inc %ecx
         inc %ebx
 
-        pushl %eax
-        movl cell_row_max, %eax
-        inc %eax
-        cmp %eax, %ecx
-        popl %eax
-    jne rloop
+        cmp cell_row_max, %ecx
+    jle rloop
 
-    popl %esi
     popl %ecx
 
     movl %ebp, %esp
@@ -302,9 +293,7 @@ apply_rules: /* apply_rules(EAX, EBX) */
     movl %esp, %ebp
     pushl %eax
     pushl %ebx
-    pushl %ecx
     pushl %edx
-    pushl %esi
 
     /* INFO(Rafael): Basically it traverses the cells inspecting the neighbours of each one and then applies
                      the game rules.
@@ -318,11 +307,6 @@ apply_rules: /* apply_rules(EAX, EBX) */
                      (Ha-ha..) 4 bits. ;) */
 
     xorl %eax, %eax
-
-    movl cell_row_max, %ecx
-    inc %ecx
-    movl cell_col_max, %esi
-    inc %esi
 
     apply_rules_rloop.0:
 
@@ -386,12 +370,12 @@ apply_rules: /* apply_rules(EAX, EBX) */
             popl %ecx
             popl %eax
 
-            cmp %esi, %ebx
-        jne apply_rules_cloop.0
+            cmp cell_col_max, %ebx
+        jle apply_rules_cloop.0
 
         inc %eax
-        cmp %ecx, %eax
-    jne apply_rules_rloop.0
+        cmp cell_row_max, %eax
+    jle apply_rules_rloop.0
 
     xorl %eax, %eax
     xorl %edx, %edx
@@ -405,16 +389,14 @@ apply_rules: /* apply_rules(EAX, EBX) */
         apply_rules_cloop.1:
             shrb $4, cells(%eax, %ebx, 1) /* now step out kids, it will shift space and time... */
             inc %ebx
-            cmp %esi, %ebx
-        jne apply_rules_cloop.1
+            cmp cell_col_max, %ebx
+        jle apply_rules_cloop.1
         popl %eax
         inc %eax
-        cmp %ecx, %eax
-    jne apply_rules_rloop.1
+        cmp cell_row_max, %eax
+    jle apply_rules_rloop.1
 
-    popl %esi
     popl %edx
-    popl %ecx
     popl %ebx
     popl %eax
     movl %ebp, %esp
@@ -440,13 +422,8 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
     pushl %ebp
     movl %esp, %ebp
     pushl %eax
-    pushl %ebx
-    pushl %edx
 
     movl %ebx, %edi
-
-    movl cell_row_max, %edx
-    inc %edx
 
     movl $0, alive_cell_nr
 
@@ -673,8 +650,6 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
         popl %edi
         popl %eax
 
-    popl %edx
-    popl %ebx
     popl %eax
     movl %ebp, %esp
     popl %ebp
