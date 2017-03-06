@@ -87,6 +87,9 @@ cell_bytes_per_row:
 sigint_watchdog_fmt:
     .asciz "Quit.\n"
 
+#option_fmt:
+#    .asciz "Option: %s\n"
+
 .section .text
 
 .globl _start
@@ -132,6 +135,41 @@ sigint_watchdog: /* sigint_watchdog(int signo) */
 
     pushl $0
     call exit
+ret
+
+.type get_option, @function
+get_option:
+
+    /* INFO(Rafael): Get the option loading it into EAX, if it does not exist load the default value from EBX */
+
+    pushl %ebp
+    movl %esp, %ebp
+
+    cmp $1, 8(%esp)
+    je no_args
+
+    movl %esp, %edx
+    addl $16, %edx
+
+    parse_args:
+        pushl %edx
+
+                            /* ---- TODO(Rafael): Glue your comparing shit here ---- */
+
+#        pushl (%edx)
+#        pushl $option_fmt
+#        call printf
+#        addl $8, %esp
+
+        popl %edx
+
+        addl $4, %edx
+        cmp $0, (%edx)
+    jne parse_args
+
+    no_args:
+        movl %ebp, %esp
+        popl %ebp
 ret
 
 .type life, @function
