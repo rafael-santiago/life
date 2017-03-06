@@ -131,7 +131,7 @@ sigint_watchdog: /* sigint_watchdog(int signo) */
 
     pushl $sigint_watchdog_fmt
     call printf
-    addl $4, %ebp
+    addl $4, %esp
 
     pushl $0
     call exit
@@ -235,9 +235,9 @@ genprint: /* genprint() */
      * During its execution...
      *
      * EAX and EBX store the x, y coordinates used on gotoxy() calls
-     * ECX holds the base offset of "cells" (a.k.a row index -> cells[][y]...)
-     * EDI holds the col index of "cells" cells[x][]...
-     * EDX holds the current byte stored in cell[x][y]...
+     * ECX holds the base offset of "cells" (a.k.a row index -> cells[y][]...)
+     * EDI holds the col index of "cells" cells[][x]...
+     * EDX holds the current byte stored in cell[][x]...
      *
      */
     pushl %ebp
@@ -453,7 +453,7 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
      * This game defines your neighbourhood as:  T U T
      *                                           T T T
      *
-     * Maybe this function could be improved to evalute only the necessary to take some decision instead
+     * Maybe this function could be improved to evalute only the enough to take some decision instead
      * of visiting and counting every neighbours. However, by now it is okay.
      */
 
