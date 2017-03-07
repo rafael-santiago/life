@@ -482,8 +482,7 @@ apply_rules: /* apply_rules(EAX, EBX) */
 
                 /* RULE(2): Any live cell with two or three live neighbours lives on to the next generation. */
                 next_generation:
-                    xorb $0x10, %cl
-                    jmp apply_rules_cloop_inc
+                    jmp reproduction
 
                 /* RULE(3): Any live cell with more than three live neighbours dies, as if by overpopulation. */
                 overpopulation:
