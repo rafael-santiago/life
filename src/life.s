@@ -105,6 +105,11 @@ option_fmt:
 option_status:
     .asciz "Status: %d\n"
 
+.section .bss
+    .lcomm argc, 4
+
+    .lcomm argv, 4
+
 .section .text
 
 .globl _start
@@ -130,24 +135,38 @@ _start:
     call signal
     addl $8, %esp
 
+    /* INFO(Rafael): Setting the argc and **argv to the related global variables used by get_option() function. */
+
+    movl %ebp, %edx
+    movl %esp, %ebp
+    movl %ebp, %ecx
+    addl $8, %ecx
+    pushl %ecx
+    pushl (%ebp)
+    call set_argc_argv
+    movl %ebp, %esp
+    movl %edx, %ebp
+
     call clrscr
 
     call life
 
+#    pushl $0
 #    pushl $default_cell_color
 #    pushl $option_cell_color
 #    call get_option
-#    addl $8, %esp
+#    addl $12, %esp
 
 #    pushl %eax
 #    pushl $option_fmt
 #    call printf
 #    addl $8, %esp
 
+#    pushl $1
 #    pushl $0
 #    pushl $option_interactive
-#    call get_bool_option
-#    addl $8, %esp
+#    call get_option
+#    addl $12, %esp
 
 #    pushl %eax
 #    pushl $option_status
@@ -175,15 +194,29 @@ sigint_watchdog: /* sigint_watchdog(int signo) */
     call exit
 ret
 
+.type set_argc_argv, @function
+set_argc_argv: /* set_argc_argv(argc, argv) */
+    pushl %ebp
+    movl %esp, %ebp
+
+    movl 8(%ebp), %eax
+    movl %eax, argc
+    movl 12(%ebp), %eax
+    movl %eax, argv
+
+    movl %ebp, %esp
+    popl %ebp
+ret
+
 .type get_option, @function
-get_option: /* get_option(option, default) */
+get_option: /* get_option(option, default, is_boolean) */
 
     /* INFO(Rafael): Get the option loading it into EAX, if it does not exist load the default value from the stack  (C Style)*/
 
     pushl %ebp
     movl %esp, %ebp
 
-    cmp $1, 16(%ebp)
+    cmp $1, argc
     je get_option_default
 
     movl 8(%ebp), %edi
@@ -197,8 +230,7 @@ get_option: /* get_option(option, default) */
     subw $0xfffe, %cx
     neg %cx
 
-    movl %ebp, %edx
-    addl $24, %edx
+    movl argv, %edx
 
     get_option_parse_args:
         pushl %edi
@@ -213,9 +245,16 @@ get_option: /* get_option(option, default) */
 
         jne get_option_parse_args_go_next
 
-        movl %esi, %eax
+        cmp $1, 16(%ebp)
 
+        je get_option_parse_args_set_boolean
+
+        movl %esi, %eax
         jmp get_option_epilogue
+
+        get_option_parse_args_set_boolean:
+            movl $1, %eax
+            jmp get_option_epilogue
 
         get_option_parse_args_go_next:
             addl $4, %edx
@@ -227,65 +266,6 @@ get_option: /* get_option(option, default) */
         movl 12(%ebp), %eax
 
     get_option_epilogue:
-        movl %ebp, %esp
-        popl %ebp
-ret
-
-.type get_bool_option, @function
-get_bool_option: /* get_bool_option(option, default_state) */
-
-    /* INFO(Rafael): Get the boolean option loading its state into EAX, if it does not exist load the default state value from the stack  (C Style)*/
-
-    /* TODO(Rafael): This is quite equals to the get_option(), try to implement the behavior of the two into
-                                     a new one without fucking the caller's brain */
-
-    pushl %ebp
-    movl %esp, %ebp
-
-    cmp $1, 16(%ebp)
-    je get_bool_option_default
-
-    movl 8(%ebp), %edi
-    pushl %edi
-    movl $0xffff, %ecx
-    movb $0, %al
-    cld
-    repne scasb
-    popl %edi
-
-    subw $0xfffe, %cx
-    neg %cx
-
-    movl %ebp, %edx
-    addl $24, %edx
-
-    get_bool_option_parse_args:
-        pushl %edi
-        pushl %ecx
-
-        movl (%edx), %esi
-
-        repe cmpsb
-
-        popl %ecx
-        popl %edi
-
-        jne get_bool_option_parse_args_go_next
-
-        movl $1, %eax
-
-        jmp get_bool_option_epilogue
-
-        get_bool_option_parse_args_go_next:
-            addl $4, %edx
-
-        cmp $0, (%edx)
-    jne get_bool_option_parse_args
-
-    get_bool_option_default:
-        movl 12(%ebp), %eax
-
-    get_bool_option_epilogue:
         movl %ebp, %esp
         popl %ebp
 ret
