@@ -96,6 +96,9 @@ option_interactive:
 default_cell_color:
     .asciz "red"
 
+test_fmt:
+    .asciz "DATA: %s\n"
+
 option_fmt:
     .asciz "Option: %s\n"
 
@@ -141,13 +144,13 @@ _start:
 #    call printf
 #    addl $8, %esp
 
-#    pushl $default_cell_color
-#    pushl $option_cell_color
-#    call get_option
+#    pushl $0
+#    pushl $option_interactive
+#    call get_bool_option
 #    addl $8, %esp
 
 #    pushl %eax
-#    pushl $option_fmt
+#    pushl $option_status
 #    call printf
 #    addl $8, %esp
 
@@ -205,8 +208,8 @@ get_option: /* get_option(option, default) */
 
         repe cmpsb
 
-        popl %edi
         popl %ecx
+        popl %edi
 
         jne get_option_parse_args_go_next
 
@@ -224,6 +227,65 @@ get_option: /* get_option(option, default) */
         movl 12(%ebp), %eax
 
     get_option_epilogue:
+        movl %ebp, %esp
+        popl %ebp
+ret
+
+.type get_bool_option, @function
+get_bool_option: /* get_bool_option(option, default_state) */
+
+    /* INFO(Rafael): Get the boolean option loading its state into EAX, if it does not exist load the default state value from the stack  (C Style)*/
+
+    /* TODO(Rafael): This is quite equals to the get_option(), try to implement the behavior of the two into
+                                     a new one without fucking the caller's brain */
+
+    pushl %ebp
+    movl %esp, %ebp
+
+    cmp $1, 16(%ebp)
+    je get_bool_option_default
+
+    movl 8(%ebp), %edi
+    pushl %edi
+    movl $0xffff, %ecx
+    movb $0, %al
+    cld
+    repne scasb
+    popl %edi
+
+    subw $0xfffe, %cx
+    neg %cx
+
+    movl %ebp, %edx
+    addl $24, %edx
+
+    get_bool_option_parse_args:
+        pushl %edi
+        pushl %ecx
+
+        movl (%edx), %esi
+
+        repe cmpsb
+
+        popl %ecx
+        popl %edi
+
+        jne get_bool_option_parse_args_go_next
+
+        movl $1, %eax
+
+        jmp get_bool_option_epilogue
+
+        get_bool_option_parse_args_go_next:
+            addl $4, %edx
+
+        cmp $0, (%edx)
+    jne get_bool_option_parse_args
+
+    get_bool_option_default:
+        movl 12(%ebp), %eax
+
+    get_bool_option_epilogue:
         movl %ebp, %esp
         popl %ebp
 ret
