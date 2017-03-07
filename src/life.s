@@ -87,8 +87,20 @@ cell_bytes_per_row:
 sigint_watchdog_fmt:
     .asciz "Quit.\n"
 
-#option_fmt:
-#    .asciz "Option: %s\n"
+option_cell_color:
+    .asciz "--cell-color="
+
+option_interactive:
+    .asciz "--interactive"
+
+default_cell_color:
+    .asciz "red"
+
+option_fmt:
+    .asciz "Option: %s\n"
+
+option_status:
+    .asciz "Status: %d\n"
 
 .section .text
 
@@ -119,6 +131,29 @@ _start:
 
     call life
 
+#    pushl $default_cell_color
+#    pushl $option_cell_color
+#    call get_option
+#    addl $8, %esp
+
+#    pushl %eax
+#    pushl $option_fmt
+#    call printf
+#    addl $8, %esp
+
+#    pushl $default_cell_color
+#    pushl $option_cell_color
+#    call get_option
+#    addl $8, %esp
+
+#    pushl %eax
+#    pushl $option_fmt
+#    call printf
+#    addl $8, %esp
+
+#    pushl $0
+#    call exit
+
 .type sigint_watchdog, @function
 sigint_watchdog: /* sigint_watchdog(int signo) */
     /* INFO(Rafael): Fuck the callstack, the sky is falling here :D */
@@ -138,36 +173,57 @@ sigint_watchdog: /* sigint_watchdog(int signo) */
 ret
 
 .type get_option, @function
-get_option:
+get_option: /* get_option(option, default) */
 
-    /* INFO(Rafael): Get the option loading it into EAX, if it does not exist load the default value from EBX */
+    /* INFO(Rafael): Get the option loading it into EAX, if it does not exist load the default value from the stack  (C Style)*/
 
     pushl %ebp
     movl %esp, %ebp
 
-    cmp $1, 8(%esp)
-    je no_args
+    cmp $1, 16(%ebp)
+    je get_option_default
 
-    movl %esp, %edx
-    addl $16, %edx
+    movl 8(%ebp), %edi
+    pushl %edi
+    movl $0xffff, %ecx
+    movb $0, %al
+    cld
+    repne scasb
+    popl %edi
 
-    parse_args:
-        pushl %edx
+    subw $0xfffe, %cx
+    neg %cx
 
-                            /* ---- TODO(Rafael): Glue your comparing shit here ---- */
+    movl %ebp, %edx
+    addl $24, %edx
 
-#        pushl (%edx)
-#        pushl $option_fmt
-#        call printf
-#        addl $8, %esp
+    get_option_parse_args:
+        pushl %edi
+        pushl %ecx
 
-        popl %edx
+        movl (%edx), %esi
 
-        addl $4, %edx
+        repe cmpsb
+
+        popl %edi
+        popl %ecx
+
+        jne get_option_parse_args_go_next
+
+        movl %esi, %eax
+
+        jmp get_option_epilogue
+
+        get_option_parse_args_go_next:
+            addl $4, %edx
+
         cmp $0, (%edx)
-    jne parse_args
+    jne get_option_parse_args
 
-    no_args:
+    get_option_default:
+        movl 12(%ebp), %eax
+
+    get_option_epilogue:
         movl %ebp, %esp
         popl %ebp
 ret
