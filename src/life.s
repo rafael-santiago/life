@@ -105,10 +105,15 @@ option_fmt:
 option_status:
     .asciz "Status: %d\n"
 
+option_cell_fmt:
+    .asciz "--alive[%d][%d]"
+
 .section .bss
     .lcomm argc, 4
 
     .lcomm argv, 4
+
+    .lcomm temp_str, 255
 
 .section .text
 
@@ -135,7 +140,8 @@ _start:
     call signal
     addl $8, %esp
 
-    /* INFO(Rafael): Setting the argc and **argv to the related global variables used by get_option() function. */
+    /* INFO(Rafael): Setting the argc and **argv to the related global variables used by get_option() function.
+                     This is stupid and slower considering the context that we are in anyway I prefer doing it. */
 
     movl %ebp, %edx
     movl %esp, %ebp
@@ -172,6 +178,8 @@ _start:
 #    pushl $option_status
 #    call printf
 #    addl $8, %esp
+
+#    call ld1stgen
 
 #    pushl $0
 #    call exit
@@ -268,6 +276,56 @@ get_option: /* get_option(option, default, is_boolean) */
     get_option_epilogue:
         movl %ebp, %esp
         popl %ebp
+ret
+
+.type ld1stgen, @function
+ld1stgen: /* ld1stgen() */
+    pushl %ebp
+    movl %esp, %ebp
+
+    xorl %ecx, %ecx
+
+    ld1stgen_rloop:
+
+        xorl %edi, %edi
+        movl %ecx, %ebx
+        imul cell_bytes_per_row, %ebx
+
+        ld1stgen_cloop:
+
+            pushl %ebx
+            pushl %ecx
+            pushl %edi
+
+            pushl %edi
+            pushl %ecx
+            pushl $option_cell_fmt
+            pushl $temp_str
+            call sprintf
+            addl $16, %esp
+
+            pushl $1
+            pushl $0
+            pushl $temp_str
+            call get_option
+            addl $12, %esp
+
+            popl %edi
+            popl %ecx
+            popl %ebx
+
+            movb %al, cells(%ebx, %edi, 1)
+
+            inc %edi
+            cmp cell_col_max, %edi
+        jle ld1stgen_cloop
+
+        inc %ecx
+        cmp cell_row_max, %ecx
+    jle ld1stgen_rloop
+
+    movl %ebp, %esp
+    popl %ebp
 ret
 
 .type life, @function
@@ -438,9 +496,9 @@ apply_rules: /* apply_rules(EAX, EBX) */
                      is quite useless and a waste of memory, due to it I have chosen to store the next generation
                      data in the most significant nibble from the "cells", it still sucks but less.
 
-                     So, the first (row;col) iteration generates a kind of "alternative universe"... the second one
-                     takes Alice (without Bob and Eva but with us) there by right shifting our current "brana" 
-                     (Ha-ha..) 4 bits. ;) */
+                     So, the first (row;col) iteration generates a kind of "alternative world"... the second one
+                     takes Alice (without Bob and Eva but with us) there by right shifting our current "brana"
+                     4 bits. ;) */
 
     xorl %eax, %eax
 
@@ -498,7 +556,7 @@ apply_rules: /* apply_rules(EAX, EBX) */
                     xorb $0x10, %cl
 
             apply_rules_cloop_inc:
-                /* INFO(Rafael): Nice, now we got the present and future of this cell at the same byte. */
+                /* INFO(Rafael): Nice, now we got the present and future of this cell at the same "byte". */
                 movb %cl, cells(%eax, %ebx, 1)
                 inc %ebx
 
@@ -551,7 +609,7 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
      *                                           T T T
      *
      * Maybe this function could be improved to evalute only the enough to take some decision instead
-     * of visiting and counting every neighbours. However, by now it is okay.
+     * of visiting and counting all neighbours. By now it is okay.
      */
 
     pushl %ebp
