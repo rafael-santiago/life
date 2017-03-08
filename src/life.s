@@ -87,17 +87,32 @@ cell_bytes_per_row:
 sigint_watchdog_fmt:
     .asciz "Quit.\n"
 
-option_cell_color:
-    .asciz "--cell-color="
+option_alive_color:
+    .asciz "--alive-color="
+
+default_alive_color:
+    .asciz "red"
+
+option_dead_color:
+    .asciz "--dead-color="
+
+default_dead_color:
+    .asciz "black"
 
 option_interactive:
     .asciz "--interactive"
 
-default_cell_color:
-    .asciz "red"
+option_board_size:
+    .asciz "--board-size="
+
+default_board_size:
+    .asciz "20"
+
+err_invalid_board_size:
+    .asciz "ERROR: invalid board size.\n"
 
 test_fmt:
-    .asciz "DATA: %s\n"
+    .asciz "DATA: '%s'\n"
 
 option_fmt:
     .asciz "Option: %s\n"
@@ -153,36 +168,66 @@ _start:
     movl %ebp, %esp
     movl %edx, %ebp
 
-    call clrscr
+    /* INFO(Rafael): Getting the --board-size=n option. */
 
-    call life
+    pushl $0
+    pushl $default_board_size
+    pushl $option_board_size
+    call get_option
+    addl $12, %esp
 
-#    pushl $0
-#    pushl $default_cell_color
-#    pushl $option_cell_color
-#    call get_option
-#    addl $12, %esp
+    pushl %eax
 
-#    pushl %eax
-#    pushl $option_fmt
-#    call printf
-#    addl $8, %esp
+    pushl %eax
+    call isnumber
+    addl $4, %esp
 
-#    pushl $1
-#    pushl $0
-#    pushl $option_interactive
-#    call get_option
-#    addl $12, %esp
+    cmp $0, %eax
+    je invalid_board_size
 
-#    pushl %eax
-#    pushl $option_status
-#    call printf
-#    addl $8, %esp
+    popl %eax
 
-#    call ld1stgen
+    pushl %eax
+    call atoi
+    addl $4, %esp
 
-#    pushl $0
-#    call exit
+    dec %eax
+    cmp $1, %eax
+    jnge invalid_board_size
+    cmp cell_bytes_per_row, %eax
+    jge invalid_board_size
+
+    movl %eax, cell_row_max
+    movl %eax, cell_col_max
+
+    /* INFO(Rafael): Loading the initial generation defined by the user. */
+
+    call ld1stgen
+
+    /* TODO(Rafael): Get the --interactive option */
+
+    /* TODO(Rafael): Get the --alive-color=color option */
+
+    /* TODO(Rafael): Get the --dead-color=color option */
+
+    /* TODO(Rafael): Get the --delay=secs option */
+
+    /* TODO(Rafael): Get the --generation-nr=n option */
+
+#   call clrscr
+
+#   call life
+
+    jmp bye
+
+    invalid_board_size:
+        pushl $err_invalid_board_size
+        call printf
+        addl $4, %esp
+
+    bye:
+        pushl $0
+        call exit
 
 .type sigint_watchdog, @function
 sigint_watchdog: /* sigint_watchdog(int signo) */
@@ -348,6 +393,43 @@ life: /* life() */
 
     movl %ebp, %esp
     popl %ebp
+ret
+
+.type isnumber, @function
+isnumber: /* isnumber(value) */
+    pushl %ebp
+    movl %esp, %ebp
+
+    movl 8(%ebp), %esi
+    movl (%esi), %eax
+
+    isnumber_parse:
+        cmp $0x30, %al
+        jl isnumber_parse_inval
+
+        cmp $0x39, %al
+        jg isnumber_parse_inval
+
+        jmp isnumber_parse_inc
+
+        isnumber_parse_inval:
+            movl $0, %eax
+            jmp isnumber_epilogue
+
+        isnumber_parse_inc:
+            inc %esi
+
+        movl (%esi), %eax
+        andl $0x000000ff, %eax
+
+        cmp $0x00, %al
+    jne isnumber_parse
+
+    movl $1, %eax
+
+    isnumber_epilogue:
+        movl %ebp, %esp
+        popl %ebp
 ret
 
 .type clrscr, @function
