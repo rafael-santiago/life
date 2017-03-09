@@ -6,6 +6,7 @@
  *
  */
 .section .data
+/* TODO(Rafael): Simplify this declaration, now we got command line parsing. */
 cells:
     .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
@@ -81,27 +82,6 @@ cell_col_max:
 cell_bytes_per_row:
     .int 40  /* INFO(Rafael): This variable must store the real maximum of columns. */
 
-sigint_watchdog_fmt:
-    .asciz "Quit.\n"
-
-option_alive_color:
-    .asciz "--alive-color="
-
-err_invalid_alive_color:
-    .asciz "ERROR: Invalid alive color.\n"
-
-default_alive_color:
-    .asciz "red"
-
-option_dead_color:
-    .asciz "--dead-color="
-
-default_dead_color:
-    .asciz "black"
-
-err_invalid_dead_color:
-    .asciz "ERROR: Invalid dead color.\n"
-
 color_black:
     .asciz "black"
 
@@ -131,6 +111,27 @@ colors:
 
 colors_nr:
     .int 8
+
+sigint_watchdog_fmt:
+    .asciz "Quit.\n"
+
+option_alive_color:
+    .asciz "--alive-color="
+
+err_invalid_alive_color:
+    .asciz "ERROR: Invalid alive color.\n"
+
+default_alive_color:
+    .int color_red
+
+option_dead_color:
+    .asciz "--dead-color="
+
+default_dead_color:
+    .int color_black
+
+err_invalid_dead_color:
+    .asciz "ERROR: Invalid dead color.\n"
 
 option_interactive:
     .asciz "--interactive"
@@ -325,7 +326,7 @@ _start:
     /* INFO(Rafael): Getting the --alive-color=color option. */
 
     pushl $0
-    pushl $default_alive_color
+    pushl default_alive_color
     pushl $option_alive_color
     call get_option
     addl $12, %esp
@@ -341,7 +342,7 @@ _start:
     /* INFO(Rafael): Getting the --dead-color=color option. */
 
     pushl $0
-    pushl $default_dead_color
+    pushl default_dead_color
     pushl $option_dead_color
     call get_option
     addl $12, %esp
@@ -357,6 +358,8 @@ _start:
     /* INFO(Rafael): Loading the initial generation defined by the user. */
 
     call ld1stgen
+
+    /* TODO(Rafael): Implement the --help and --version options. */
 
 #   call clrscr
 
