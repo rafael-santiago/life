@@ -225,6 +225,9 @@ _start:
         call printf
         addl $4, %esp
 
+    pushl $1
+    call exit
+
     bye:
         pushl $0
         call exit
