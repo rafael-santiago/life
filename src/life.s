@@ -556,6 +556,8 @@ life: /* life() */
     xorl %eax, %eax
     xorl %ebx, %ebx
 
+    /* TODO(Rafael): Evolve (or slow down... ha-ha) this loop with the new options. */
+
     gameloop:
         call genprint
 
