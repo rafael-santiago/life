@@ -594,7 +594,6 @@ isnumber: /* isnumber(value) */
             inc %esi
 
         movl (%esi), %eax
-        andl $0x000000ff, %eax
 
         cmp $0x00, %al
     jne isnumber_parse
