@@ -175,12 +175,6 @@ err_invalid_delay:
 test_fmt:
     .asciz "DATA: '%s'\n"
 
-option_fmt:
-    .asciz "Option: %s\n"
-
-option_status:
-    .asciz "Status: %d\n"
-
 option_cell_fmt:
     .asciz "--alive[%d][%d]"
 
