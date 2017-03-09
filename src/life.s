@@ -49,10 +49,10 @@ cells:
     .byte 0x00, 0x00, 0x00, 0xab, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 
 alive_fmt:
-    .asciz "\033[41m \033[m\r"
+    .asciz "\033[40m \033[m"
 
 dead_fmt:
-    .asciz "\033[40m \033[m\r"
+    .asciz "\033[40m \033[m"
 
 gotoxy_fmt:
     .asciz "\033[%d;%dH"
@@ -65,9 +65,6 @@ newline_fmt:
 
 alive_cell_nr:
     .int 0
-
-usleep_time:
-    .int 200000
 
 cell_row_min:
     .int 0
@@ -90,6 +87,9 @@ sigint_watchdog_fmt:
 option_alive_color:
     .asciz "--alive-color="
 
+err_invalid_alive_color:
+    .asciz "ERROR: Invalid alive color.\n"
+
 default_alive_color:
     .asciz "red"
 
@@ -99,8 +99,56 @@ option_dead_color:
 default_dead_color:
     .asciz "black"
 
+err_invalid_dead_color:
+    .asciz "ERROR: Invalid dead color.\n"
+
+color_black:
+    .asciz "black"
+
+color_red:
+    .asciz "red"
+
+color_green:
+    .asciz "green"
+
+color_yellow:
+    .asciz "yellow"
+
+color_blue:
+    .asciz "blue"
+
+color_magenta:
+    .asciz "magenta"
+
+color_cyan:
+    .asciz "cyan"
+
+color_white:
+    .asciz "white"
+
+colors:
+    .int color_black, color_red, color_green, color_yellow, color_blue, color_magenta, color_cyan, color_white
+
+colors_nr:
+    .int 8
+
 option_interactive:
     .asciz "--interactive"
+
+interactive_mode:
+    .int 0
+
+option_generation_nr:
+    .asciz "--generation-nr="
+
+default_generation_nr:
+    .asciz "0"
+
+generation_nr:
+    .int 0
+
+err_invalid_generation_nr:
+    .asciz "ERROR: Invalid total of generations.\n"
 
 option_board_size:
     .asciz "--board-size="
@@ -109,7 +157,19 @@ default_board_size:
     .asciz "20"
 
 err_invalid_board_size:
-    .asciz "ERROR: invalid board size.\n"
+    .asciz "ERROR: Invalid board size.\n"
+
+option_delay:
+    .asciz "--delay="
+
+default_delay:
+    .asciz "2"
+
+usleep_time:
+    .int 200000
+
+err_invalid_delay:
+    .asciz "ERROR: Invalid delay value.\n"
 
 test_fmt:
     .asciz "DATA: '%s'\n"
@@ -200,36 +260,148 @@ _start:
     movl %eax, cell_row_max
     movl %eax, cell_col_max
 
+    /* INFO(Rafael): Getting the --interactive option. */
+
+    pushl $1
+    pushl $0
+    pushl $option_interactive
+    call get_option
+    addl $12, %esp
+    movl %eax, interactive_mode
+
+    /* INFO(Rafael): Getting the --generation-nr=n option. */
+
+    pushl $0
+    pushl $default_generation_nr
+    pushl $option_generation_nr
+    call get_option
+    addl $12, %esp
+
+    pushl %eax
+    pushl %eax
+    call isnumber
+    addl $4, %esp
+
+    cmp $0, %eax
+    je invalid_generation_nr
+
+    popl %eax
+
+    pushl %eax
+    call atoi
+    addl $4, %esp
+
+    movl %eax, generation_nr
+
+    /* INFO(Rafael): Getting the --delay=secs option. */
+
+    pushl $0
+    pushl $default_delay
+    pushl $option_delay
+    call get_option
+    addl $12, %esp
+
+    pushl %eax
+
+    pushl %eax
+    call isnumber
+    addl $4, %esp
+
+    cmp $0, %eax
+    je invalid_delay
+
+    popl %eax
+
+    pushl %eax
+    call atoi
+    addl $4, %esp
+
+    cmp $0, %eax
+    jle invalid_delay
+
+    imul $100000, %eax
+    movl %eax, usleep_time
+
+    /* INFO(Rafael): Getting the --alive-color=color option. */
+
+    pushl $0
+    pushl $default_alive_color
+    pushl $option_alive_color
+    call get_option
+    addl $12, %esp
+
+    pushl %eax
+    pushl $alive_fmt
+    call ldcolor
+    addl $8, %esp
+
+    cmp $0, %eax
+    je invalid_alive_color
+
+    /* INFO(Rafael): Getting the --dead-color=color option. */
+
+    pushl $0
+    pushl $default_dead_color
+    pushl $option_dead_color
+    call get_option
+    addl $12, %esp
+
+    pushl %eax
+    pushl $dead_fmt
+    call ldcolor
+    addl $8, %esp
+
+    cmp $0, %eax
+    je invalid_dead_color
+
     /* INFO(Rafael): Loading the initial generation defined by the user. */
 
     call ld1stgen
-
-    /* TODO(Rafael): Get the --interactive option */
-
-    /* TODO(Rafael): Get the --alive-color=color option */
-
-    /* TODO(Rafael): Get the --dead-color=color option */
-
-    /* TODO(Rafael): Get the --delay=secs option */
-
-    /* TODO(Rafael): Get the --generation-nr=n option */
 
 #   call clrscr
 
 #   call life
 
+    movl $0, %eax
     jmp bye
 
     invalid_board_size:
         pushl $err_invalid_board_size
         call printf
         addl $4, %esp
+        movl $1, %eax
+        jmp bye
 
-    pushl $1
-    call exit
+    invalid_generation_nr:
+        pushl $err_invalid_generation_nr
+        call printf
+        addl $4, %esp
+        movl $1, %eax
+        jmp bye
+
+    invalid_delay:
+        pushl $err_invalid_delay
+        call printf
+        addl $4, %esp
+        movl $1, %eax
+        jmp bye
+
+    invalid_alive_color:
+        pushl $err_invalid_alive_color
+        call printf
+        addl $4, %esp
+        movl $1, %eax
+        jmp bye
+
+    invalid_dead_color:
+        pushl $err_invalid_dead_color
+        call printf
+        addl $4, %esp
+        movl $1, %eax
+        jmp bye
 
     bye:
-        pushl $0
+        pushl %eax
         call exit
 
 .type sigint_watchdog, @function
@@ -431,6 +603,58 @@ isnumber: /* isnumber(value) */
     movl $1, %eax
 
     isnumber_epilogue:
+        movl %ebp, %esp
+        popl %ebp
+ret
+
+.type ldcolor, @function
+ldcolor: /* ldcolor(addr color_fmt, color) */
+
+    /* INFO(Rafael): This function loads the ansi color coding into the passed formatter.
+                     Returning back 0 on loading errors otherwise 1. */
+
+    pushl %ebp
+    movl %esp, %ebp
+
+    movl $0, %ecx
+
+    ldcolor_parse:
+        pushl %ecx
+
+        movl colors(, %ecx, 4), %edi
+        pushl %edi
+        movl $0xffff, %ecx
+        movb $0, %al
+        cld
+        repne scasb
+        subw $0xfffe, %cx
+        neg %cx
+
+        movl 12(%ebp), %esi
+        popl %edi
+
+        repe cmpsb
+        jne ldcolor_parse_inc
+
+        popl %ecx
+        movl 8(%ebp), %edi
+        addl $3, %edi
+        addl %ecx, (%edi)
+
+        movl $1, %eax
+
+        jmp ldcolor_epilogue
+
+        ldcolor_parse_inc:
+            popl %ecx
+            inc %ecx
+
+        cmp colors_nr, %ecx
+    jne ldcolor_parse
+
+    movl $0, %eax
+
+    ldcolor_epilogue:
         movl %ebp, %esp
         popl %ebp
 ret
