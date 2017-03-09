@@ -23,7 +23,7 @@ all steps to put ``hefesto`` to work on your system, you should "teach" your bui
 ``GNU's Assembler``. You need three commands:
 
 ```
-root@SilvergunSuperman:~/src# git clone https://github.com/rafael-santiago/helios
+root@SilvergunSuperman:~/src# git clone https://github.com/rafael-santiago/helios helios
 root@SilvergunSuperman:~/src# cd helios
 root@SilvergunSuperman:~/src/helios# hefesto --install=gnu-asm-toolset
 ```
@@ -40,7 +40,7 @@ you@SilvergunSuperman:~/src/life# cd src
 you@SilvergunSuperman:~/src/life/src# hefesto
 ```
 
-An ``ELF`` called ``life`` will be created under the current directory and that's it.
+An ``ELF`` called ``life`` will be created under the path ``../bin`` and that's it.
 
 If for some reason you are wanting a debug version of it:
 
