@@ -173,7 +173,7 @@ err_invalid_delay:
     .asciz "ERROR: Invalid delay value.\n"
 
 test_fmt:
-    .asciz "DATA: '%s'\n"
+    .asciz "DATA: '%d'\n"
 
 option_cell_fmt:
     .asciz "--alive[%d][%d]"
@@ -599,12 +599,12 @@ ret
 life: /* life() */
     pushl %ebp
     movl %esp, %ebp
-    subl $4, %esp
+    subl $8, %esp
 
     xorl %eax, %eax
     xorl %ebx, %ebx
 
-    /* TODO(Rafael): Implement the --generation-nr limit. */
+    movl $0, -8(%ebp)
 
     gameloop:
         call genprint
@@ -615,6 +615,7 @@ life: /* life() */
         pushl usleep_time
         call usleep
         addl $4, %esp
+
         jmp gameloop_gonext
 
         gameloop_enter_waiting:
@@ -627,7 +628,15 @@ life: /* life() */
 
         gameloop_gonext:
             call apply_rules
-    jmp gameloop
+
+        cmp $0, generation_nr
+        je gameloop
+
+        leal -8(%ebp), %edx
+        addl $1, (%edx)
+        movl generation_nr, %ecx
+        cmp (%edx), %ecx
+    jne gameloop
 
     life_epilogue:
         movl %ebp, %esp
