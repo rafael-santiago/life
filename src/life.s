@@ -599,24 +599,39 @@ ret
 life: /* life() */
     pushl %ebp
     movl %esp, %ebp
+    subl $4, %esp
 
     xorl %eax, %eax
     xorl %ebx, %ebx
 
-    /* TODO(Rafael): Evolve (or slow down... ha-ha) this loop with the new options. */
+    /* TODO(Rafael): Implement the --generation-nr limit. */
 
     gameloop:
         call genprint
 
+        cmp $1, interactive_mode
+        je gameloop_enter_waiting
+
         pushl usleep_time
         call usleep
         addl $4, %esp
+        jmp gameloop_gonext
 
-        call apply_rules
+        gameloop_enter_waiting:
+            leal -4(%ebp), %ecx
+            pushl $1
+            pushl %ecx
+            pushl $0
+            call read
+            addl $12, %esp
+
+        gameloop_gonext:
+            call apply_rules
     jmp gameloop
 
-    movl %ebp, %esp
-    popl %ebp
+    life_epilogue:
+        movl %ebp, %esp
+        popl %ebp
 ret
 
 .type isnumber, @function
