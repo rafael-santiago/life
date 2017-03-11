@@ -74,12 +74,12 @@ at **Table 1** to see more about these command line options.
 
 |**Option**| **Description** | **Passing sample** |
 |:--------:|----------------:|:----------:|
-|``interactive``          | Indicates that before each new generation an ``ENTER`` is expected | ``life --interactive`` |
+|``--interactive``          | Indicates that before each new generation an ``ENTER`` is expected | ``life --interactive`` |
 |``--alive-color=color``  | Defines the color for representing alive cells. The colors should  be: ``black``, ``red``, ``green``, ``blue``, ``magenta``, ``cyan`` or ``white`` | ``life --alive-color=cyan`` |
 |``--dead-color=color``   | Defines the color for representing dead cells. The colors should be: ``black``, ``red``, ``green``, ``blue``, ``magenta``, ``cyan`` or ``white`` | ``life --alive-dead=green`` |
 |``--delay=milliseconds`` | Indicates the amount of times (in milliseconds) to wait before the next generation | ``life --delay=1000`` |
-|``generation-nr=n``      | Sets a limit for the game loop | ``life --generation=100`` |
-|``board-size=n``         | Defines the size of the square shaped board. The values should be between ``2`` and ``45`` | ``life --board-size=10`` |
+|``--generation-nr=n``      | Sets a limit for the game loop | ``life --generation=100`` |
+|``--board-size=n``         | Defines the size of the square shaped board. The values should be between ``2`` and ``45`` | ``life --board-size=10`` |
 |``--alive[y][x]``        | Makes a cell under (y;x) coordinate alive | ``life --alive[0][0]`` |
 
 Let's start with a block at the beginning of the board:
