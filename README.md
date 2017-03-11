@@ -66,7 +66,36 @@ you@SilvergunSuperman:~/src/life/src# hefesto --uninstall
 
 ## How to use it?
 
-*(((coming soon)))*
+This application works based on command line, if you call on your console just ``life`` without passing any argument, as a result
+you will see a black screen. You need to inform the initial state of the board and also can inform other things if you want to. Take a look
+at **Table 1** to see more about these command line options.
+
+**Table 1**: Supported command line options until now
+
+|**Option**| **Description** | **Passing sample** |
+|:--------:|----------------:|:----------:|
+|``interactive``         | Indicates that before each new generation an ``ENTER`` is expected | ``life --interactive`` |
+|``--alive-color=color`` | Defines the color for representing alive cells. The colors should  be: ``black``, ``red``, ``green``, ``blue``, ``magenta``, ``cyan`` or ``white`` | ``life --alive-color=cyan`` |
+|``--dead-color=color``  | Defines the color for representing dead cells. The colors should be: ``black``, ``red``, ``green``, ``blue``, ``magenta``, ``cyan`` or ``white`` | ``life --alive-dead=green`` |
+|``--delay=milliseconds  | Indicates the amount of times (in milliseconds) to wait before the next generation | ``life --delay=1000`` |
+|``generation-nr=n``     | Sets a limit for the game loop | ``life --generation=100`` |
+|``board-size=n``        | Defines the size of the square shaped board. The values should be between ``2`` and ``45`` | ``life --board-size=10`` |
+|``--alive[y][x]``       | Makes a cell under (y;x) coordinate alive | ``life --alive[0][0]`` |
+
+Let's start with a block at the beginning of the board:
+
+```
+you@SilvergunSuperman:~/src/life/src# life --alive[0][0] --alive[0][1] \
+> --alive[1][0] --alive[1][1]
+```
+
+Now let's define a blinker, using the color ``magenta`` for the alive cells.
+
+
+```
+you@SilvergunSuperman:~/src/life/src# life --alive[2][1] \
+> --alive[2][3] --alive[2][4] --alive-color=magenta
+```
 
 ## .*
 
