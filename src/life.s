@@ -155,7 +155,8 @@ option_help:
 help:
     .ascii "use: %s [--interactive --alive-color=color --dead-color=color --board-size=n\n"
     .ascii "                            --alive[n][n] --delay=[millisecs] --generation-nr=n]\n\n"
-    .ascii " * You should try the command 'man life' in order to know how to live with those options listed in the usage line.\n\n"
+    .ascii " * You should try the command 'man life' in order to know how to live with those options listed in the usage "
+    .ascii "line.\n\n"
     .ascii "life is licensed under GPLv2. This is a free software. Yes, your life is yours..or at least should be!\n"
     .ascii "life (not your) is Copyright (C) 2017 by Rafael Santiago.\n\n"
     .asciz "Bug reports, feedback, etc: <https://github.com/rafael-santiago/life/issues>\n\n"
