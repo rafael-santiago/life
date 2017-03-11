@@ -160,6 +160,9 @@ help:
     .ascii "life (not your) is Copyright (C) 2017 by Rafael Santiago.\n\n"
     .asciz "Bug reports, feedback, etc: <https://github.com/rafael-santiago/life/issues>\n\n"
 
+quit_game:
+    .int 0
+
 .section .bss
     .lcomm argc, 4
 
@@ -174,8 +177,7 @@ help:
 _start:
 
     /* INFO(Rafael): No problem on using immediate values for POSIX signals here,
-                     they are standard, any decent UNIX will follow them...
-                     It would be AWESOME if we could or'ing all this shit up, hu?... :-\*/
+                     they are standard, any decent UNIX will follow them. */
 
     pushl $sigint_watchdog
     pushl $2
@@ -205,7 +207,7 @@ _start:
     movl %ebp, %esp
     movl %edx, %ebp
 
-    /* INFO(Rafael): Branching to --version or --help sections. */
+    /* INFO(Rafael): Branching to --version or --help sections if the user asked us. */
 
     pushl $1
     pushl $0
@@ -354,10 +356,13 @@ _start:
     /* INFO(Rafael): Loading the initial generation defined by the user. */
 
     call ld1stgen
+    call clrscr
+    call life
 
-   call clrscr
-
-   call life
+    call clrscr
+    pushl $sigint_watchdog_fmt
+    call printf
+    addl $4, %esp
 
     movl $0, %eax
     jmp bye
@@ -418,20 +423,13 @@ _start:
 
 .type sigint_watchdog, @function
 sigint_watchdog: /* sigint_watchdog(int signo) */
-    /* INFO(Rafael): Fuck the callstack, the sky is falling here :D */
+    pushl %ebp
+    movl %esp, %ebp
 
-    /* TODO(Rafael): Bad, because is not a good idea to call printf from this
-                     kind of function. It should be improved on. Maybe a
-                     silly dummy flag holding the main loop. */
+    movl $1, quit_game
 
-    call clrscr
-
-    pushl $sigint_watchdog_fmt
-    call printf
-    addl $4, %esp
-
-    pushl $0
-    call exit
+    movl %ebp, %esp
+    popl %ebp
 ret
 
 .type set_argc_argv, @function
@@ -572,6 +570,9 @@ life: /* life() */
     movl $0, -8(%ebp)
 
     gameloop:
+        cmp $1, quit_game
+        je life_epilogue
+
         call genprint
 
         cmp $1, interactive_mode
