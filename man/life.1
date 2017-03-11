@@ -1,0 +1,54 @@
+.TH life 1 "March 10, 2017" "version v0.1" "USER COMMANDS"
+.SH NAME
+life \- a minimalist Conway's Game of Life
+.SH SYNOPSIS
+.B life [\fIOPTIONS\fR]
+.SH DESCRIPTION
+Life is a simple implementation of the Conway's Game of Life that uses only the console resources
+to handle the game graphic stuff.
+
+The user should inform the initial state of the board through the command line.
+
+.SH OPTIONS
+.TP
+\-\-alive[y][x]
+Defines an alive cell under the coordinate (y;x).
+
+.TP
+\-\-board-size=\fIn\fR
+Defines the board size (NxN). This can be a value between 2 and 45. The default is 20.
+
+.TP
+\-\-alive-color=\fIcolor\fR
+Defines the color used for representing alive cells. The colors should be: black, red, green, yellow, blue, magenta, cyan or white.
+The default is red.
+
+.TP
+\-\-dead-color=\fIcolor\fR
+Defines the color used for representing dead cells. The colors should be: black, red, green, yellow, blue, magenta, cyan or white.
+The default is black.
+
+.TP
+\-\-interactive
+Defines that after each generation the application will wait for the \fIENTER\fR key.
+
+.TP
+\-\-delay=\fImilliseconds\fR
+Defines the duration of each generation in milliseconds.
+The default is 200 milliseconds.
+
+.TP
+\-\-generation-nr=\fIn\fR
+Defines the total of generations before exiting.
+The default is unlimited.
+
+.SH EXIT STATUS
+The application always returns zero on normal conditions. On some error non-zero values are returned.
+
+.PP
+.SH
+HOMEPAGE
+.TP
+https://github.com/rafael-santiago/life
+.SH AUTHOR
+Rafael Santiago <voidbrainvoid@gmail.com>
