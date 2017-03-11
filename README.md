@@ -70,7 +70,7 @@ This application works based on command line, if you call on your console just `
 you will see a black screen. You need to inform the initial state of the board and also can inform other things if you want to. Take a look
 at **Table 1** to see more about these command line options.
 
-**Table 1**: Supported command line options until now
+**Table 1**: Supported command line options until now.
 
 |**Option**| **Description** | **Passing sample** |
 |:--------:|----------------:|:----------:|
@@ -96,6 +96,40 @@ Now let's define a blinker, using the color ``magenta`` for the alive cells.
 you@SilvergunSuperman:~/src/life/src# life --alive[2][1] \
 > --alive[2][3] --alive[2][4] --alive-color=magenta
 ```
+
+The **Table 2** gathers famous patterns.
+
+**Table 2**: Some oscillators.
+
+| **Pattern** |                                      **Sample**                                      |
+|:-----------:|:------------------------------------------------------------------------------------:|
+| ``Blinker`` | ![blinker](https://github.com/rafael-santiago/life/blob/master/etc/life-blinker.gif) |
+| ``Beacon``  | ![beacon](https://github.com/rafael-santiago/life/blob/master/etc/life-beacon.gif)   |
+| ``Toad``    | ![toad](https://github.com/rafael-santiago/life/blob/master/etc/life-toad.gif)       |
+| ``Pulsar``  | ![pulsar](https://github.com/rafael-santiago/life/blob/master/etc/life-pulsar.gif)   |
+
+For example, to produce the Pulsar oscillattor in **Table 2**, I have used the following command line:
+
+```
+you@SilvergunSuperman:~/src/life/src# life --alive[2][4] --alive[2][5] --alive[2][6] \
+> --alive[4][2] --alive[5][2] --alive[6][2] \
+> --alive[4][7] --alive[5][7] --alive[6][7] \
+> --alive[7][4] --alive[7][5]  --alive[7][6] \
+> --alive[2][10] --alive[2][11] --alive[2][12] \
+> --alive[4][9] --alive[5][9] --alive[6][9] \
+> --alive[7][10] --alive[7][11] --alive[7][12] \
+> --alive[4][14] --alive[5][14] --alive[6][14] \
+> --alive[9][4] --alive[9][5] --alive[9][6] \
+> --alive[10][2] --alive[11][2] --alive[12][2] \
+> --alive[14][4] --alive[14][5] --alive[14][6] \
+> --alive[10][7] --alive[11][7] --alive[12][7] \
+> --alive[9][10] --alive[9][11] --alive[9][12] \
+> --alive[10][9] --alive[11][9] --alive[12][9] \
+> --alive[14][10] --alive[14][11] --alive[14][12] \
+> --alive[10][14] --alive[11][14] --alive[12][14] \
+> --delay=500 --alive-color=cyan
+```
+Yes, it is not for sissies! :D
 
 ## .*
 
