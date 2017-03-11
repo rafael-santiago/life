@@ -52,9 +52,19 @@ you@SilvergunSuperman:~/src/life/src# hefesto --compile-model=debug
 
 ## How to install it?
 
-*(((coming soon)))*
+Being under the ``src`` sub-directory you should do the following:
 
-## How to use?
+```
+you@SilvergunSuperman:~/src/life/src# hefesto --install
+```
+
+If you want to uninstall:
+
+```
+you@SilvergunSuperman:~/src/life/src# hefesto --uninstall
+```
+
+## How to use it?
 
 *(((coming soon)))*
 
