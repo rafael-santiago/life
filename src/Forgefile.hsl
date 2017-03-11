@@ -5,7 +5,9 @@
 # the terms of the GNU General Public License version 2.
 #
 #
+
 include ~/toolsets/gas/gas-app.hsl
+include ~/fsutil.hsl
 
 local var sources type list;
 local var includes type list;
@@ -15,10 +17,122 @@ local var ldflags type list;
 
 project life : toolset "gas-app" : $sources, $includes, $cflags, $libraries, $ldflags, "life";
 
-life.prologue() {
+life.prologue()
+{
+
+    installer();
+
     $includes = hefesto.sys.get_option("includes");
     $cflags = hefesto.sys.get_option("cflags");
     $libraries = hefesto.sys.get_option("libraries");
     $ldflags = hefesto.sys.get_option("ldflags");
     $sources.ls(".*\\.s$");
+
+}
+
+local function installer() : result type none {
+    var option type list;
+    $option = hefesto.sys.get_option("install");
+
+    if ($option.count() > 0) {
+        hefesto.project.abort(install());
+    }
+
+    $option = hefesto.sys.get_option("uninstall");
+
+    if ($option.count() > 0) {
+        hefesto.project.abort(uninstall());
+    }
+}
+
+local function install() : result type int {
+    var dest_path type string;
+    var bin_path type string;
+
+    if (isfile("../bin/life") == 0) {
+        var exit_code type int;
+        $exit_code = hefesto.sys.run("hefesto");
+        if ($exit_code != 0) {
+            result $exit_code;
+        }
+    }
+
+    $bin_path = "../bin/life";
+    $dest_path = "/usr/games";
+
+    if (isdir($dest_path) == 0) {
+        $dest_path = "/usr/local/bin";
+        mktree($dest_path); # INFO(Rafael): Usually even not existing it is "exported" by default on some *nix.
+    }
+
+    $dest_path = hefesto.sys.make_path($dest_path, "life");
+
+    if (isfile($dest_path)) {
+        var options type list;
+        $options.add_item("y");
+        $options.add_item("Y");
+        $options.add_item("n");
+        $options.add_item("N");
+
+        var choice type string;
+        $choice = question("Do you want to overwrite the file " + $dest_path + "? [y/n] ", $options);
+
+        if ($choice == "n" || $choice == "N") {
+            hefesto.sys.echo("INFO: Aborted.\n");
+            result 1;
+        }
+    }
+
+    if (hefesto.sys.cp($bin_path, $dest_path) != 1) {
+        hefesto.sys.echo("ERROR: Unable to copy the binary to '" + $dest_path + "'.\n");
+        result 1;
+    }
+
+    mktree("/usr/local/man/man6");
+
+    if (hefesto.sys.cp("../man/life.6", "/usr/local/man/man6/life.6") != 1) {
+        hefesto.sys.echo("WARN: Unable to copy the man page to '/usr/local/man/man6/life.6'.\n");
+        result 1;
+    }
+
+    hefesto.sys.echo("INFO: Installed.\n");
+
+    result 0;
+}
+
+local function uninstall() : result type int {
+    var answers type list;
+
+    $answers.add_item("Y");
+    $answers.add_item("y");
+    $answers.add_item("N");
+    $answers.add_item("n");
+
+    var answer type string;
+    $answer = question("Do you want to uninstall it? [y/n] ", $answers);
+
+    if ($answer == "n" || $answer == "N") {
+        hefesto.sys.echo("INFO: Aborted.\n");
+        result 1;
+    }
+
+    hefesto.sys.rm("/usr/games/life");
+    hefesto.sys.rm("/usr/local/bin/life");
+    hefesto.sys.rm("/usr/local/man/man6/life.6");
+
+    hefesto.sys.echo("INFO: Uninstalled.\n");
+
+    result 0;
+}
+
+local function question(qstr type string, answers type list) : result type string {
+    var a type string;
+
+    $a = "";
+
+    while ($answers.index_of($a) == -1) {
+        $a = hefesto.sys.prompt($qstr);
+    }
+
+    result $a;
 }
