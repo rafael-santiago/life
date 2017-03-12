@@ -74,7 +74,7 @@ you@SilvergunSuperman:~/src/life/src# hefesto --uninstall
 
 This application works based on command line, if you call on your console just ``life`` without passing any argument, as a result
 you will see a black screen. You need to inform the initial state of the board and also can inform other things if you want to. Take a look
-at **Table 1** to see more about these command line options.
+at the **Table 1** to see more about these command line options.
 
 **Table 1**: Supported command line options until now.
 
