@@ -1,2 +1,4 @@
 *.o
 src/life
+src/.ldpath
+

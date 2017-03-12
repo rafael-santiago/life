@@ -1,1 +1,1 @@
---forgefiles=Forgefile.hsl --Forgefile-projects=life --ldflags=-lc,--dynamic-linker,/lib/ld-linux.so.2 --obj-dir=o --bin-dir=../bin
+--forgefiles=Forgefile.hsl --Forgefile-projects=life --ldflags=-lc --obj-dir=o --bin-dir=../bin

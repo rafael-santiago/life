@@ -141,7 +141,7 @@ test_fmt:
     .asciz "DATA: '%d'\n"
 
 option_cell_fmt:
-    .asciz "--alive[%d][%d]"
+    .asciz "--alive-%d-%d"
 
 option_version:
     .asciz "--version"
@@ -154,7 +154,7 @@ option_help:
 
 help:
     .ascii "use: %s [--interactive --alive-color=color --dead-color=color --board-size=n\n"
-    .ascii "                            --alive[n][n] --delay=[millisecs] --generation-nr=n]\n\n"
+    .ascii "                            --alive-n-n --delay=[millisecs] --generation-nr=n]\n\n"
     .ascii " * You should try the command 'man life' in order to know how to live with those options listed in the usage "
     .ascii "line.\n\n"
     .ascii "life is licensed under GPLv2. This is a free software. Yes, your life is yours..or at least should be!\n"
@@ -163,6 +163,18 @@ help:
 
 quit_game:
     .int 0
+
+.ifdef __FreeBSD__
+    /* INFO(Rafael): Trick to link it with libc on FreeBSD. Avoiding undefined reference errors
+                        related with the following symbols. */
+.globl environ
+environ:
+    .quad 0
+
+.globl __progname
+__progname:
+    .asciz "life"
+.endif
 
 .section .bss
     .lcomm argc, 4
