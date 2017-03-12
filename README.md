@@ -1,7 +1,7 @@
 # life
 
 This repo is a minimalist implementation of the ``Conway's Game of Life`` in ``IA-32 Assembly`` using
-``ANSI/TERM`` to handle the "graphic" stuff. Until now it was written to run on ``Linux`` and ``FreeBSD``.
+``ANSI/TERM`` to handle the "graphic" stuff. Until now it was written to run on ``Linux``, ``FreeBSD``, ``OpenBSD``.
 
 ## How to clone it?
 

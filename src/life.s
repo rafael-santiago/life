@@ -174,6 +174,21 @@ environ:
 .globl __progname
 __progname:
     .asciz "life"
+
+.endif
+
+.ifdef __OpenBSD__
+    /* INFO(Rafael): This tag identifies our binary as an OpenBSD ELF,
+            otherwise the nosy shell will try to execute it. I hate it.. */
+.section ".note.openbsd.ident", "a"
+    .align 2
+    .int 8
+    .int 4
+    .int 1
+    .asciz "OpenBSD"
+    .int 0
+    .align 2
+
 .endif
 
 .section .bss
