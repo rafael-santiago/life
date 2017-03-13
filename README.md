@@ -1,7 +1,8 @@
 # life
 
 This repo is a minimalist implementation of the ``Conway's Game of Life`` in ``IA-32 Assembly`` using
-``ANSI/TERM`` to handle the "graphic" stuff. Until now it was written to run on ``Linux``, ``FreeBSD``, ``OpenBSD`` and ``NetBSD``.
+``ANSI/TERM`` to handle the "graphic" stuff. Until now it was written to run on ``Linux``, ``FreeBSD``, ``OpenBSD``,
+``NetBSD`` and ``MINIX``.
 
 ## How to clone it?
 
@@ -59,8 +60,8 @@ you@SilvergunSuperman:~/src/life/src# hefesto --ld-path=/usr/libexec/ld-elf.so.1
 ### I still prefer building it by myself...
 
 I think that ``ASSEMBLY`` people are not choosy, so build it by hand is pretty straightforward for them. Even so I took care
-to write all this stuff in one single file (``src/life.s``). If you are not on ``Linux`` you should add to your ``as`` (Ha-Ha)
-command the option ``-dsym SYMBOL=1``. In **Table 1** you can find the correct symbol to your current platform.
+to write all this stuff in one single file (``src/life.s``). If you are not on ``Linux`` nor on ``MINIX`` you should add to 
+your ``as`` (Ha-Ha) command the option ``-dsym SYMBOL=1``. In **Table 1** you can find the correct symbol to your current platform.
 
 **Table 1**: A thing that you probably already know.
 
@@ -71,7 +72,7 @@ command the option ``-dsym SYMBOL=1``. In **Table 1** you can find the correct s
 | ``NetBSD``    |  ``__NetBSD__``  |
 
 Yes! The same macros that we commonly use when writing ``C`` programs... I love smart people!
-Honoring the memory of a rebel monkey that came down from the tree and started all this shit... that's it!
+Always honoring the memory of a rebel monkey that came down from the tree and started all this shit... that's it! :)
 
 I also love good conventions...
 

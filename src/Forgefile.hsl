@@ -43,6 +43,8 @@ life.prologue()
     } else if (hefesto.sys.os_name() == "netbsd") {
         $ldflags.add_item("-m elf_i386");
         $cflags.add_item("-defsym __NetBSD__=1");
+    } else if (hefesto.sys.os_name() == "minix") {
+        $ldflags.add_item("-m elf_i386_minix");
     }
 
     $ldflags.add_item($dlinker);
@@ -70,7 +72,7 @@ local function ldpath() : result type string {
                 $path = "/usr/libexec/ld.so";
             } else if (hefesto.sys.os_name() == "linux") {
                 $path = "/lib/ld-linux.so.2";
-            } else if (hefesto.sys.os_name() == "netbsd") {
+            } else if (hefesto.sys.os_name() == "netbsd" || hefesto.sys.os_name() == "minix") {
                 $path = "/usr/libexec/ld.elf_so";
             }
         }
