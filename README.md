@@ -121,8 +121,8 @@ Now let's define a blinker, using the color ``magenta`` for the alive cells.
 
 
 ```
-you@SilvergunSuperman:~/src/life/src# life --alive-2-1 \
-> --alive-2-3 --alive-2-4 --alive-color=magenta
+you@SilvergunSuperman:~/src/life/src# life --2,1. \
+> --2,3. --2,4. --alive-color=magenta
 ```
 
 The **Table 3** gathers famous patterns.

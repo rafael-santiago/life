@@ -179,7 +179,7 @@ __progname:
 
 .ifdef __OpenBSD__
     /* INFO(Rafael): This tag identifies our binary as an OpenBSD ELF,
-            otherwise the nosy shell will try to interpret binary. I hate it.. */
+            otherwise the nosy shell will try to interpret a binary. I hate it.. */
 .section ".note.openbsd.ident", "a"
     .align 2
     .int 8

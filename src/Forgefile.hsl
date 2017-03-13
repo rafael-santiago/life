@@ -32,7 +32,9 @@ life.prologue()
     var dlinker type string;
     $dlinker = "-dynamic-linker " + ldpath();
 
-    if (hefesto.sys.os_name() == "freebsd") {
+    if (hefesto.sys.os_name() == "linux") {
+        $ldflags.add_item("-m elf_i386");
+    } else if (hefesto.sys.os_name() == "freebsd") {
         $ldflags.add_item("-m elf_i386_fbsd");
         $cflags.add_item("-defsym __FreeBSD__=1");
     } else if (hefesto.sys.os_name() == "openbsd") {
