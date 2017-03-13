@@ -141,7 +141,7 @@ test_fmt:
     .asciz "DATA: '%d'\n"
 
 option_cell_fmt:
-    .asciz "--alive-%d-%d"
+    .asciz "--%d,%d."
 
 option_version:
     .asciz "--version"
@@ -179,7 +179,7 @@ __progname:
 
 .ifdef __OpenBSD__
     /* INFO(Rafael): This tag identifies our binary as an OpenBSD ELF,
-            otherwise the nosy shell will try to execute it. I hate it.. */
+            otherwise the nosy shell will try to interpret binary. I hate it.. */
 .section ".note.openbsd.ident", "a"
     .align 2
     .int 8
@@ -188,6 +188,19 @@ __progname:
     .asciz "OpenBSD"
     .int 0
     .align 2
+
+.endif
+
+.ifdef __NetBSD__
+
+.section ".note.netbsd.ident", "a"
+     /* INFO(Rafael): The same shit on NetBSD. */
+    .int 7
+    .int 4
+    .int 1
+    .asciz "NetBSD"
+    .byte 0
+    .int 0
 
 .endif
 

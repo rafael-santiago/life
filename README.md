@@ -1,7 +1,7 @@
 # life
 
 This repo is a minimalist implementation of the ``Conway's Game of Life`` in ``IA-32 Assembly`` using
-``ANSI/TERM`` to handle the "graphic" stuff. Until now it was written to run on ``Linux``, ``FreeBSD``, ``OpenBSD``.
+``ANSI/TERM`` to handle the "graphic" stuff. Until now it was written to run on ``Linux``, ``FreeBSD``, ``OpenBSD`` and ``NetBSD``.
 
 ## How to clone it?
 
@@ -68,6 +68,7 @@ command the option ``-dsym SYMBOL=1``. In **Table 1** you can find the correct s
 |:-------------:|:----------------:|
 | ``FreeBSD``   |  ``__FreeBSD__`` |
 | ``OpenBSD``   |  ``__OpenBSD__`` |
+| ``NetBSD``    |  ``__NetBSD__``  |
 
 Yes! The same macros that we commonly use when writing ``C`` programs... I love smart people!
 Honoring the memory of a rebel monkey that came down from the tree and started all this shit... that's it!
@@ -104,13 +105,13 @@ at the **Table 2** to see more about these command line options.
 |``--delay=milliseconds`` | Indicates the amount of times (in milliseconds) to wait before the next generation | ``life --delay=1000`` |
 |``--generation-nr=n``      | Sets a limit for the game loop | ``life --generation=100`` |
 |``--board-size=n``         | Defines the size of the square shaped board. The values should be between ``2`` and ``45`` | ``life --board-size=10`` |
-|``--alive-y-x``        | Makes a cell under (y;x) coordinate alive | ``life --alive-0-0`` |
+|``--y,x.``        | Makes a cell under (y;x) coordinate alive | ``life --0,0.`` |
 
 Let's start with a block at the beginning of the board:
 
 ```
-you@SilvergunSuperman:~/src/life/src# life --alive-0-0 --alive-0-1 \
-> --alive-1-0 --alive-1-1
+you@SilvergunSuperman:~/src/life/src# life --0,0. --0,1. \
+> --1,0. --1,1.
 ```
 
 Now let's define a blinker, using the color ``magenta`` for the alive cells.
@@ -135,22 +136,22 @@ The **Table 3** gathers famous patterns.
 For example, to produce the Pulsar oscillator in **Table 3**, I have used the following command line:
 
 ```
-you@SilvergunSuperman:~/src/life/src# life --alive-2-4 --alive-2-5 --alive-2-6 \
-> --alive-4-2 --alive-5-2 --alive-6-2 \
-> --alive-4-7 --alive-5-7 --alive-6-7 \
-> --alive-7-4 --alive-7-5  --alive-7-6 \
-> --alive-2-10 --alive-2-11 --alive-2-12 \
-> --alive-4-9 --alive-5-9 --alive-6-9 \
-> --alive-7-10 --alive-7-11 --alive-7-12 \
-> --alive-4-14 --alive-5-14 --alive-6-14 \
-> --alive-9-4 --alive-9-5 --alive-9-6 \
-> --alive-10-2 --alive-11-2 --alive-12-2 \
-> --alive-14-4 --alive-14-5 --alive-14-6 \
-> --alive-10-7 --alive-11-7 --alive-12-7 \
-> --alive-9-10 --alive-9-11 --alive-9-12 \
-> --alive-10-9 --alive-11-9 --alive-12-9 \
-> --alive-14-10 --alive-14-11 --alive-14-12 \
-> --alive-10-14 --alive-11-14 --alive-12-14 \
+you@SilvergunSuperman:~/src/life/src# life --2,4. --2,5. --2,6. \
+> --4,2. --5,2. --6,2. \
+> --4,7. --5,7. --6,7. \
+> --7,4. --7,5.  --7,6. \
+> --2,10. --2,11. --2,12. \
+> --4,9. --5,9. --6,9. \
+> --7,10. --7,11. --7,12. \
+> --4,14. --5,14. --6,14. \
+> --9,4. --9,5. --9,6. \
+> --10,2. --11,2. --12,2. \
+> --14,4. --14,5. --14,6. \
+> --10,7. --11,7. --12,7. \
+> --9,10. --9,11. --9,12. \
+> --10,9. --11,9. --12,9. \
+> --14,10. --14,11. --14,12. \
+> --10,14. --11,14. --12,14. \
 > --delay=500 --alive-color=cyan
 ```
 Yes, it is not for cowards..
