@@ -132,7 +132,7 @@ The **Table 3** gathers famous patterns.
 | ``Toad``    | ![toad](https://github.com/rafael-santiago/life/blob/master/etc/life-toad.gif)       |
 | ``Pulsar``  | ![pulsar](https://github.com/rafael-santiago/life/blob/master/etc/life-pulsar.gif)   |
 
-For example, to produce the Pulsar oscillator in **Table 2**, I have used the following command line:
+For example, to produce the Pulsar oscillator in **Table 3**, I have used the following command line:
 
 ```
 you@SilvergunSuperman:~/src/life/src# life --alive-2-4 --alive-2-5 --alive-2-6 \
