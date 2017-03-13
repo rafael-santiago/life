@@ -16,7 +16,7 @@ Done.
 ## How to build it?
 
 I have written it using the ``GNU's Assembler`` (a.k.a ``gas``). You can use the build system or do it
-by your own (in this case my code is using the ``libc``).
+on your own (in this case my code is using the ``libc``).
 
 This tiny project uses my own [build system](https://github.com/rafael-santiago/hefesto). After following
 all steps to put ``hefesto`` to work on your system, you should "teach" your build system copy how to handle the
@@ -56,6 +56,24 @@ If you prefer/need to inform your dynamic loader path, try to use the option ``-
 you@SilvergunSuperman:~/src/life/src# hefesto --ld-path=/usr/libexec/ld-elf.so.1
 ```
 
+## I still prefer building it by myself...
+
+I think that ``ASSEMBLY`` people are not choosy, so build it by hand is pretty straightforward for them. Even so I took care
+to write all this stuff in one single file (``src/life.s``). If you are not on ``Linux`` you should add to your ``as`` (Ha-Ha)
+command the option ``-dsym SYMBOL=1``. In **Table 1** you can find the correct symbol to your current platform.
+
+**Table 1**: A thing that you probably already know.
+
+| **Platform**  |      **SYMBOL**  |
+|:-------------:|:----------------:|
+| ``FreeBSD``   |  ``__FreeBSD__`` |
+| ``OpenBSD``   |  ``__OpenBSD__`` |
+
+Yes! The same macros that we commonly use when writing ``C`` programs... I love smart people!
+Honoring the memory of a rebel monkey that came down from the tree and started all this shit... that's it!
+
+I also love good conventions...
+
 ## How to install it?
 
 Being under the ``src`` sub-directory you should do the following:
@@ -74,9 +92,9 @@ you@SilvergunSuperman:~/src/life/src# hefesto --uninstall
 
 This application works based on command line, if you call on your console just ``life`` without passing any argument, as a result
 you will see a black screen. You need to inform the initial state of the board and also can inform other things if you want to. Take a look
-at the **Table 1** to see more about these command line options.
+at the **Table 2** to see more about these command line options.
 
-**Table 1**: Supported command line options until now.
+**Table 2**: Supported command line options until now.
 
 |**Option**| **Description** | **Passing sample** |
 |:--------:|----------------:|:----------:|
@@ -103,9 +121,9 @@ you@SilvergunSuperman:~/src/life/src# life --alive-2-1 \
 > --alive-2-3 --alive-2-4 --alive-color=magenta
 ```
 
-The **Table 2** gathers famous patterns.
+The **Table 3** gathers famous patterns.
 
-**Table 2**: Some oscillators.
+**Table 3**: Some oscillators.
 
 | **Pattern** |                                      **Sample**                                      |
 |:-----------:|:------------------------------------------------------------------------------------:|
