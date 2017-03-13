@@ -56,7 +56,7 @@ If you prefer/need to inform your dynamic loader path, try to use the option ``-
 you@SilvergunSuperman:~/src/life/src# hefesto --ld-path=/usr/libexec/ld-elf.so.1
 ```
 
-## I still prefer building it by myself...
+### I still prefer building it by myself...
 
 I think that ``ASSEMBLY`` people are not choosy, so build it by hand is pretty straightforward for them. Even so I took care
 to write all this stuff in one single file (``src/life.s``). If you are not on ``Linux`` you should add to your ``as`` (Ha-Ha)
@@ -82,6 +82,9 @@ Being under the ``src`` sub-directory you should do the following:
 ```
 you@SilvergunSuperman:~/src/life/src# hefesto --install
 ```
+
+If your ``UNIX-like`` has the directory ``/usr/games``, ``life`` will be installed there. On some ``UNIXes`` this directory
+is not exported, so you should call ``/usr/games/life`` instead of ``life``.
 
 If you want to uninstall:
 
