@@ -3,7 +3,7 @@
 This repo is a minimalist implementation of the ``Conway's Game of Life`` in ``IA-32 Assembly`` using
 ``ANSI/TERM`` to handle the "graphic" stuff. Until now it was written to run on the following platforms:
 
-![Linux](https://github.com/rafael-santiago/life/blob/master/etc/small-tux.jpg "Linux") ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.jpg "FreeBSD") ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.jpg "OpenBSD") ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.jpg "NetBSD") ![MINIX](https://github.com/rafael-santiago/life/blob/master/etc/small-raccoon.jpg "MINIX") ![SOLARIS](https://github.com/rafael-santiago/life/blob/master/etc/small-solaris-sun.jpg "Solaris")
+![Linux](https://github.com/rafael-santiago/life/blob/master/etc/small-tux.png "Linux") ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.png "FreeBSD") ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.png "OpenBSD") ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.png "NetBSD") ![MINIX](https://github.com/rafael-santiago/life/blob/master/etc/small-raccoon.png "MINIX") ![SOLARIS](https://github.com/rafael-santiago/life/blob/master/etc/small-solaris-sun.png "Solaris")
 
 ## How to clone it?
 
@@ -74,9 +74,9 @@ not intending to rewrite all the code stuff only for tan as... *BA DUM TSSS*... 
 
 | **Platform**                                                                                       |    **SYMBOL**    |
 |:--------------------------------------------------------------------------------------------------:|:----------------:|
-| ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.jpg "FreeBSD")    |  ``__FreeBSD__`` |
-| ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.jpg "OpenBSD")      |  ``__OpenBSD__`` |
-| ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.jpg "NetBSD")  |  ``__NetBSD__``  |
+| ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.png "FreeBSD")    |  ``__FreeBSD__`` |
+| ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.png "OpenBSD")      |  ``__OpenBSD__`` |
+| ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.png "NetBSD")  |  ``__NetBSD__``  |
 
 Yes! The same macros that we commonly use when writing ``C`` programs... I love smart people!
 Always honoring the memory of a rebel monkey that came down from the tree and started all this shit... that's it! :)
