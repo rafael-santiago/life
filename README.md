@@ -3,7 +3,7 @@
 This repo is a minimalist implementation of the ``Conway's Game of Life`` in ``IA-32 Assembly`` using
 ``ANSI/TERM`` to handle the "graphic" stuff. Until now it was written to run on the following platforms:
 
-![Linux](https://github.com/rafael-santiago/life/blob/master/etc/small-tux.png "Linux") ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.png "FreeBSD") ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.png "OpenBSD") ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.png "NetBSD") ![MINIX](https://github.com/rafael-santiago/life/blob/master/etc/small-raccoon.png "MINIX") ![SOLARIS](https://github.com/rafael-santiago/life/blob/master/etc/small-solaris-sun.png "Solaris")
+![Linux](https://github.com/rafael-santiago/life/blob/master/etc/small-tux.png "Linux") ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.png "FreeBSD") ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.png "OpenBSD") ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.png "NetBSD") ![MINIX](https://github.com/rafael-santiago/life/blob/master/etc/small-raccoon.jpg "MINIX") ![SOLARIS](https://github.com/rafael-santiago/life/blob/master/etc/small-solaris-sun.png "Solaris")
 
 ## How to clone it?
 
