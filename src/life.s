@@ -1,14 +1,14 @@
-/*
- *                                Copyright (C) 2017 by Rafael Santiago
- *
- * This is a free software. You can redistribute it and/or modify under
- * the terms of the GNU General Public License version 2.
- *
- */
+#
+#                                Copyright (C) 2017 by Rafael Santiago
+#
+# This is a free software. You can redistribute it and/or modify under
+# the terms of the GNU General Public License version 2.
+#
+#
 
 .section .data
 
-.equ CELL_BYTES_PER_ROW, 45 /* INFO(Rafael): It should store the real maximum of columns. */
+.equ CELL_BYTES_PER_ROW, 45 # INFO(Rafael): It should store the real maximum of columns.
 
 cells:
     .rept (CELL_BYTES_PER_ROW * CELL_BYTES_PER_ROW)
@@ -129,7 +129,7 @@ option_delay:
     .asciz "--delay="
 
 default_delay:
-    .asciz "200"  /* Although being internally used with usleep this time should be defined here in milliseconds. */
+    .asciz "200"  # Although being internally used with usleep this time should be defined here in milliseconds.
 
 usleep_time:
     .int 200000
@@ -165,8 +165,8 @@ quit_game:
     .int 0
 
 .ifdef __FreeBSD__
-    /* INFO(Rafael): Trick to link it with libc on FreeBSD. Avoiding undefined reference errors
-                        related with the following symbols. */
+    # INFO(Rafael): Trick to link it with libc on FreeBSD. Avoiding undefined reference errors
+    #               related with the following symbols.
 .globl environ
 environ:
     .quad 0
@@ -178,8 +178,8 @@ __progname:
 .endif
 
 .ifdef __OpenBSD__
-    /* INFO(Rafael): This tag identifies our binary as an OpenBSD ELF,
-            otherwise the nosy shell will try to interpret a binary. I hate it.. */
+    # INFO(Rafael): This tag identifies our binary as an OpenBSD ELF,
+    #               otherwise the nosy shell will try to interpret a binary. I hate it..
 .section ".note.openbsd.ident", "a"
     .align 2
     .int 8
@@ -194,7 +194,7 @@ __progname:
 .ifdef __NetBSD__
 
 .section ".note.netbsd.ident", "a"
-     /* INFO(Rafael): The same shit on NetBSD. */
+     # INFO(Rafael): The same shit on NetBSD.
     .int 7
     .int 4
     .int 1
@@ -217,8 +217,8 @@ __progname:
 
 _start:
 
-    /* INFO(Rafael): No problem on using immediate values for POSIX signals here,
-                     they are standard, any decent UNIX will follow them. */
+    # INFO(Rafael): No problem on using immediate values for POSIX signals here,
+    #               they are standard, any decent UNIX will follow them.
 
     pushl $sigint_watchdog
     pushl $2
@@ -235,8 +235,8 @@ _start:
     call signal
     addl $8, %esp
 
-    /* INFO(Rafael): Setting the argc and **argv to the related global variables used by get_option() function.
-                     This is stupid and slower considering the context that we are in anyway I prefer doing it. */
+    # INFO(Rafael): Setting the argc and **argv to the related global variables used by get_option() function.
+    #               This is stupid and slower considering the context that we are in anyway I prefer doing it.
 
     movl %ebp, %edx
     movl %esp, %ebp
@@ -248,7 +248,7 @@ _start:
     movl %ebp, %esp
     movl %edx, %ebp
 
-    /* INFO(Rafael): Branching to --version or --help sections if the user asked us. */
+    # INFO(Rafael): Branching to --version or --help sections if the user asked us.
 
     pushl $1
     pushl $0
@@ -268,7 +268,7 @@ _start:
     cmp $1, %eax
     je show_help
 
-    /* INFO(Rafael): Getting the --board-size=n option. */
+    # INFO(Rafael): Getting the --board-size=n option.
 
     pushl $0
     pushl $default_board_size
@@ -300,7 +300,7 @@ _start:
     movl %eax, cell_row_max
     movl %eax, cell_col_max
 
-    /* INFO(Rafael): Getting the --interactive option. */
+    # INFO(Rafael): Getting the --interactive option.
 
     pushl $1
     pushl $0
@@ -309,7 +309,7 @@ _start:
     addl $12, %esp
     movl %eax, interactive_mode
 
-    /* INFO(Rafael): Getting the --generation-nr=n option. */
+    # INFO(Rafael): Getting the --generation-nr=n option.
 
     pushl $0
     pushl $default_generation_nr
@@ -333,7 +333,7 @@ _start:
 
     movl %eax, generation_nr
 
-    /* INFO(Rafael): Getting the --delay=millisecs option. */
+    # INFO(Rafael): Getting the --delay=millisecs option.
 
     pushl $0
     pushl $default_delay
@@ -362,7 +362,7 @@ _start:
     imul $1000, %eax
     movl %eax, usleep_time
 
-    /* INFO(Rafael): Getting the --alive-color=color option. */
+    # INFO(Rafael): Getting the --alive-color=color option.
 
     pushl $0
     pushl default_alive_color
@@ -378,7 +378,7 @@ _start:
     cmp $0, %eax
     je invalid_alive_color
 
-    /* INFO(Rafael): Getting the --dead-color=color option. */
+    # INFO(Rafael): Getting the --dead-color=color option.
 
     pushl $0
     pushl default_dead_color
@@ -394,7 +394,7 @@ _start:
     cmp $0, %eax
     je invalid_dead_color
 
-    /* INFO(Rafael): Loading the initial generation defined by the user. */
+    # INFO(Rafael): Loading the initial generation defined by the user.
 
     call ld1stgen
     call clrscr
@@ -463,7 +463,7 @@ _start:
         call exit
 
 .type sigint_watchdog, @function
-sigint_watchdog: /* sigint_watchdog(int signo) */
+sigint_watchdog: # sigint_watchdog(int signo)
     pushl %ebp
     movl %esp, %ebp
 
@@ -474,7 +474,7 @@ sigint_watchdog: /* sigint_watchdog(int signo) */
 ret
 
 .type set_argc_argv, @function
-set_argc_argv: /* set_argc_argv(argc, argv) */
+set_argc_argv: # set_argc_argv(argc, argv)
     pushl %ebp
     movl %esp, %ebp
 
@@ -488,9 +488,9 @@ set_argc_argv: /* set_argc_argv(argc, argv) */
 ret
 
 .type get_option, @function
-get_option: /* get_option(option, default, is_boolean) */
+get_option: # get_option(option, default, is_boolean)
 
-    /* INFO(Rafael): Get the option loading it into EAX, if it does not exist load the default value from the stack  (C Style)*/
+    # INFO(Rafael): Get the option loading it into EAX, if it does not exist load the default value from the stack  (C Style)
 
     pushl %ebp
     movl %esp, %ebp
@@ -550,7 +550,7 @@ get_option: /* get_option(option, default, is_boolean) */
 ret
 
 .type ld1stgen, @function
-ld1stgen: /* ld1stgen() */
+ld1stgen: # ld1stgen()
     pushl %ebp
     movl %esp, %ebp
 
@@ -600,7 +600,7 @@ ld1stgen: /* ld1stgen() */
 ret
 
 .type life, @function
-life: /* life() */
+life: # life()
     pushl %ebp
     movl %esp, %ebp
     subl $8, %esp
@@ -651,7 +651,7 @@ life: /* life() */
 ret
 
 .type isnumber, @function
-isnumber: /* isnumber(value) */
+isnumber: # isnumber(value)
     pushl %ebp
     movl %esp, %ebp
 
@@ -687,10 +687,10 @@ isnumber: /* isnumber(value) */
 ret
 
 .type ldcolor, @function
-ldcolor: /* ldcolor(addr color_fmt, color) */
+ldcolor: # ldcolor(addr color_fmt, color)
 
-    /* INFO(Rafael): This function loads the ansi color coding into the passed formatter.
-                     Returning back 0 on loading errors otherwise 1. */
+    # INFO(Rafael): This function loads the ansi color coding into the passed formatter.
+    #               Returning back 0 on loading errors otherwise 1.
 
     pushl %ebp
     movl %esp, %ebp
@@ -739,7 +739,7 @@ ldcolor: /* ldcolor(addr color_fmt, color) */
 ret
 
 .type clrscr, @function
-clrscr: /* clrscr() */
+clrscr: # clrscr()
     pushl %ebp
     movl %esp, %ebp
 
@@ -757,7 +757,7 @@ clrscr: /* clrscr() */
 ret
 
 .type gotoxy, @function
-gotoxy: /* gotoxy(EAX, EBX) */
+gotoxy: # gotoxy(EAX, EBX)
     pushl %ebp
     movl %esp, %ebp
 
@@ -772,18 +772,18 @@ gotoxy: /* gotoxy(EAX, EBX) */
 ret
 
 .type genprint, @function
-genprint: /* genprint() */
-    /*
-     * INFO(Rafael): Well, it prints one generation.
-     *
-     * During its execution...
-     *
-     * EAX and EBX store the x, y coordinates used on gotoxy() calls
-     * ECX holds the base offset of "cells" (a.k.a row index -> cells[y][]...)
-     * EDI holds the col index of "cells" cells[][x]...
-     * EDX holds the current byte stored in cell[][x]...
-     *
-     */
+genprint: # genprint()
+    #
+    # INFO(Rafael): Well, it prints one generation.
+    #
+    # During its execution...
+    #
+    # EAX and EBX store the x, y coordinates used on gotoxy() calls
+    # ECX holds the base offset of "cells" (a.k.a row index -> cells[y][]...)
+    # EDI holds the col index of "cells" cells[][x]...
+    # EDX holds the current byte stored in cell[][x]...
+    #
+
     pushl %ebp
     movl %esp, %ebp
 
@@ -867,26 +867,26 @@ genprint: /* genprint() */
 ret
 
 .type apply_rules, @function
-apply_rules: /* apply_rules(EAX, EBX) */
-    /*
-     * INFO(Rafael): If life sucks to you, I think that you should start from here ;)
-     */
+apply_rules: # apply_rules(EAX, EBX)
+    #
+    # INFO(Rafael): If life sucks to you, I think that you should start from here ;)
+    #
     pushl %ebp
     movl %esp, %ebp
     pushl %eax
     pushl %ebx
     pushl %edx
 
-    /* INFO(Rafael): Basically it traverses the cells inspecting the neighbours of each one and then applies
-                     the game rules.
-
-                     I think that use a kind of "temp_cells", "aux_cells" only to store the next generation data
-                     is quite useless and a waste of memory, due to it I have chosen to store the next generation
-                     data in the most significant nibble from the "cells", it still sucks but less.
-
-                     So, the first (row;col) iteration generates a kind of "alternative world"... the second one
-                     takes Alice (without Bob and Eva but with us) there by right shifting our current "brana"
-                     4 bits. ;) */
+    # INFO(Rafael): Basically it traverses the cells inspecting the neighbours of each one and then applies
+    #                the game rules.
+    #
+    #                I think that use a kind of "temp_cells", "aux_cells" only to store the next generation data
+    #                is quite useless and a waste of memory, due to it I have chosen to store the next generation
+    #                data in the most significant nibble from the "cells", it still sucks but less.
+    #
+    #                So, the first (row;col) iteration generates a kind of "alternative world"... the second one
+    #                takes Alice (without Bob and Eva but with us) there by right shifting our current "brana"
+    #                4 bits. ;)
 
     xorl %eax, %eax
 
@@ -921,30 +921,30 @@ apply_rules: /* apply_rules(EAX, EBX) */
 
                 jg overpopulation
 
-                /* RULE(1): Any live cell with fewer than two live neighbours dies, as if caused by underpopulation. */
+                # RULE(1): Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
                 underpopulation:
-                    /* INFO(Rafael): The next generation nibble is already zero, thus just skipping to increment stuff. */
+                    # INFO(Rafael): The next generation nibble is already zero, thus just skipping to increment stuff.
                     jmp apply_rules_cloop_inc
 
-                /* RULE(2): Any live cell with two or three live neighbours lives on to the next generation. */
+                # RULE(2): Any live cell with two or three live neighbours lives on to the next generation.
                 next_generation:
                     jmp reproduction
 
-                /* RULE(3): Any live cell with more than three live neighbours dies, as if by overpopulation. */
+                # RULE(3): Any live cell with more than three live neighbours dies, as if by overpopulation.
                 overpopulation:
-                    /* INFO(Rafael): The next generation nibble is already '0', thus just skip to increment stuff. */
+                    # INFO(Rafael): The next generation nibble is already '0', thus just skip to increment stuff.
                     jmp apply_rules_cloop_inc
 
             deadcell_rules:
                 cmp $3, alive_cell_nr
                 jne apply_rules_cloop_inc
 
-                /* RULE(4): Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction. */
+                # RULE(4): Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
                 reproduction:
                     xorb $0x10, %cl
 
             apply_rules_cloop_inc:
-                /* INFO(Rafael): Nice, now we got the present and future of this cell at the same "byte". */
+                # INFO(Rafael): Nice, now we got the present and future of this cell at the same "byte".
                 movb %cl, cells(%eax, %ebx, 1)
                 inc %ebx
 
@@ -961,14 +961,14 @@ apply_rules: /* apply_rules(EAX, EBX) */
     xorl %eax, %eax
     xorl %edx, %edx
 
-    /* INFO(Rafael): The lair of the rabbit... */
+    # INFO(Rafael): The lair of the rabbit...
 
     apply_rules_rloop.1:
         xorl %ebx, %ebx
         pushl %eax
         imul $CELL_BYTES_PER_ROW, %eax
         apply_rules_cloop.1:
-            shrb $4, cells(%eax, %ebx, 1) /* now step out kids, it will shift space and time... */
+            shrb $4, cells(%eax, %ebx, 1) # now step out kids, it will shift space and time...
             inc %ebx
             cmp cell_col_max, %ebx
         jle apply_rules_cloop.1
@@ -985,20 +985,20 @@ apply_rules: /* apply_rules(EAX, EBX) */
 ret
 
 .type inspect_neighbourhood, @function
-inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
-    /*
-     * INFO(Rafael): Given a "high level" coordinate [ E.g.: cells(1;1) ]...
-     *
-     * ...this function will inspect the neighbours of the related cell, getting the amount of
-     * alive cells. When calling this function, the EAX register must hold the "y" and the EBX the "x".
-     *
-     *                                           T T T
-     * This game defines your neighbourhood as:  T U T
-     *                                           T T T
-     *
-     * Maybe this function could be improved to evalute only the enough to take some decision instead
-     * of visiting and counting all neighbours. By now it is okay.
-     */
+inspect_neighbourhood: # inspect_neighbourhood(EAX, EBX)
+    #
+    # INFO(Rafael): Given a "high level" coordinate [ E.g.: cells(1;1) ]...
+    #
+    # ...this function will inspect the neighbours of the related cell, getting the amount of
+    # alive cells. When calling this function, the EAX register must hold the "y" and the EBX the "x".
+    #
+    #                                           T T T
+    # This game defines your neighbourhood as:  T U T
+    #                                           T T T
+    #
+    # Maybe this function could be improved to evalute only the enough to take some decision instead
+    # of visiting and counting all neighbours. By now it is okay.
+    #
 
     pushl %ebp
     movl %esp, %ebp
@@ -1008,7 +1008,7 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
 
     movl $0, alive_cell_nr
 
-    /* INFO(Rafael): Inspecting the state of cells[r+1][c]. */
+    # INFO(Rafael): Inspecting the state of cells[r+1][c].
 
     pushl %eax
     pushl %edi
@@ -1033,7 +1033,7 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
         popl %edi
         popl %eax
 
-    /* INFO(Rafael): Inspecting the state of cells[r-1][c]. */
+    # INFO(Rafael): Inspecting the state of cells[r-1][c].
 
     pushl %eax
     pushl %edi
@@ -1059,7 +1059,7 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
         popl %edi
         popl %eax
 
-    /* INFO(Rafael): Inspecting the state of cells[r][c+1]. */
+    # INFO(Rafael): Inspecting the state of cells[r][c+1].
 
     pushl %eax
     pushl %edi
@@ -1085,7 +1085,7 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
         popl %edi
         popl %eax
 
-    /* INFO(Rafael): Inspecting the state of cells[r][c-1]. */
+    # INFO(Rafael): Inspecting the state of cells[r][c-1].
 
     pushl %eax
     pushl %edi
@@ -1111,7 +1111,7 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
         popl %edi
         popl %eax
 
-    /* INFO(Rafael): Inspecting the state of cells[r-1][c-1]. */
+    # INFO(Rafael): Inspecting the state of cells[r-1][c-1].
 
     pushl %eax
     pushl %edi
@@ -1141,7 +1141,7 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
         popl %edi
         popl %eax
 
-    /* INFO(Rafael): Inspecting the state of cells[r-1][c+1]. */
+    # INFO(Rafael): Inspecting the state of cells[r-1][c+1].
 
     pushl %eax
     pushl %edi
@@ -1171,7 +1171,7 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
         popl %edi
         popl %eax
 
-    /* INFO(Rafael): Inspecting the state of cells[r+1][c-1]. */
+    # INFO(Rafael): Inspecting the state of cells[r+1][c-1].
 
     pushl %eax
     pushl %edi
@@ -1201,7 +1201,7 @@ inspect_neighbourhood: /* inspect_neighbourhood(EAX, EBX) */
         popl %edi
         popl %eax
 
-    /* INFO(Rafael): Inspecting the state of cells[r+1][c+1]. */
+    # INFO(Rafael): Inspecting the state of cells[r+1][c+1].
 
     pushl %eax
     pushl %edi

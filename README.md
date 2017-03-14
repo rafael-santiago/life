@@ -3,7 +3,7 @@
 This repo is a minimalist implementation of the ``Conway's Game of Life`` in ``IA-32 Assembly`` using
 ``ANSI/TERM`` to handle the "graphic" stuff. Until now it was written to run on the following platforms:
 
-![Linux](https://github.com/rafael-santiago/life/blob/master/etc/small-tux.jpg "Linux") ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.jpg "FreeBSD") ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.jpg "OpenBSD") ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.jpg "NetBSD") ![MINIX](https://github.com/rafael-santiago/life/blob/master/etc/small-raccoon.jpg "MINIX")
+![Linux](https://github.com/rafael-santiago/life/blob/master/etc/small-tux.jpg "Linux") ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.jpg "FreeBSD") ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.jpg "OpenBSD") ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.jpg "NetBSD") ![MINIX](https://github.com/rafael-santiago/life/blob/master/etc/small-raccoon.jpg "MINIX") ![SOLARIS](https://github.com/rafael-santiago/life/blob/master/etc/small-solaris-sun.jpg "Solaris")
 
 ## How to clone it?
 
@@ -61,8 +61,14 @@ you@SilvergunSuperman:~/src/life/src# hefesto --ld-path=/usr/libexec/ld-elf.so.1
 ### I still prefer building it by myself...
 
 I think that ``ASSEMBLY`` people are not choosy, so build it by hand is pretty straightforward for them. Even so I took care
-to write all this stuff in one single file (``src/life.s``). If you are not on ``Linux`` nor on ``MINIX`` you should add to 
-your ``as`` (Ha-Ha) command the option ``-dsym SYMBOL=1``. In **Table 1** you can find the correct symbol to your current platform.
+to write all this stuff in one single file (``src/life.s``). If you are on a platform listed in **Table 1** you should add to
+your ``as`` (Ha-Ha) command the option ``-dsym SYMBOL=1``. In **Table 1** you can find the correct symbol to your current
+platform.
+
+AFAIK, on ``Solaris`` the ``as`` is related to its native Assembler, due to it you should call ``gcc`` or ``"gas"``
+instead of using your good and old ``"as"``, *BA DUM TSSS* ... Now if you do not have the ``GNU Assembler`` installed on
+your ``Solaris`` box I would say that your system by now is out of gas... *BA DUM TSSS*... Anyway, install it because I am
+not intending to rewrite all the code stuff only for tan as... *BA DUM TSSS*... Horrible, well, getting back to **Table 1**...
 
 **Table 1**: A thing that you probably already know.
 
