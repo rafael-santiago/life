@@ -140,6 +140,12 @@ err_invalid_delay:
 test_fmt:
     .asciz "DATA: '%d'\n"
 
+data_fmt:
+    .asciz "DATA: '%s'\n"
+
+test_c:
+    .asciz "DATA: %c (%.8x)\n"
+
 option_cell_fmt:
     .asciz "--%d,%d."
 
@@ -163,6 +169,13 @@ help:
 
 quit_game:
     .int 0
+
+.ifdef _WIN32
+    argv:
+        .rept 8192
+            .int 0
+        .endr
+.endif
 
 .ifdef __FreeBSD__
     # INFO(Rafael): Trick to link it with libc on FreeBSD. Avoiding undefined reference errors
@@ -207,15 +220,21 @@ __progname:
 .section .bss
     .lcomm argc, 4
 
-    .lcomm argv, 4
+    .ifndef _WIN32
+        .lcomm argv, 4
+    .endif
 
     .lcomm temp_str, 255
 
 .section .text
 
-.globl _start
-
-_start:
+.ifndef _WIN32
+    .globl _start
+    _start:
+.else
+    .globl _main
+    _main:
+.endif
 
     # INFO(Rafael): No problem on using immediate values for POSIX signals here,
     #               they are standard, any decent UNIX will follow them.
@@ -235,18 +254,31 @@ _start:
     call signal
     addl $8, %esp
 
-    # INFO(Rafael): Setting the argc and **argv to the related global variables used by get_option() function.
-    #               This is stupid and slower considering the context that we are in anyway I prefer doing it.
+    .ifndef _WIN32
+        # INFO(Rafael): Setting the argc and **argv to the related global variables used by get_option() function.
+        #               This is stupid and slower considering the context that we are in anyway I prefer doing it.
 
-    movl %ebp, %edx
-    movl %esp, %ebp
-    movl %ebp, %ecx
-    addl $8, %ecx
-    pushl %ecx
-    pushl (%ebp)
-    call set_argc_argv
-    movl %ebp, %esp
-    movl %edx, %ebp
+        movl %ebp, %edx
+        movl %esp, %ebp
+        movl %ebp, %ecx
+        addl $8, %ecx
+        pushl %ecx
+        pushl (%ebp)
+        call set_argc_argv
+        movl %ebp, %esp
+        movl %edx, %ebp
+    .else
+        movl %ebp, %edx
+        movl %esp, %ebp
+        movl 4(%ebp), %ebx
+        movl 8(%ebp), %ecx
+        #addl $4, %ecx # INFO(Rafael): We will parse one useless item, the argv[0] (is a nightmare getting it after on help printing).
+        pushl (%ecx)
+        pushl 4(%ebp)
+        call set_argc_argv
+        movl %ebp, %esp
+        movl %edx, %ebp
+    .endif
 
     # INFO(Rafael): Branching to --version or --help sections if the user asked us.
 
@@ -359,7 +391,9 @@ _start:
     cmp $0, %eax
     jle invalid_delay
 
-    imul $1000, %eax
+    .ifndef _WIN32 # INFO(Rafael): Internally on Windows we call _sleep instead of _usleep.
+        imul $1000, %eax
+    .endif
     movl %eax, usleep_time
 
     # INFO(Rafael): Getting the --alive-color=color option.
@@ -416,7 +450,11 @@ _start:
         jmp bye
 
     show_help:
-        pushl 4(%esp)
+        .ifndef _WIN32
+            pushl 4(%esp)
+        .else
+            pushl argv
+        .endif
         pushl $help
         call printf
         addl $4, %esp
@@ -480,8 +518,56 @@ set_argc_argv: # set_argc_argv(argc, argv)
 
     movl 8(%ebp), %eax
     movl %eax, argc
-    movl 12(%ebp), %eax
-    movl %eax, argv
+    .ifndef _WIN32
+        movl 12(%ebp), %eax
+        movl %eax, argv
+    .else
+        #INFO(Rafael): Doing the windows kernel programmer job.. :Z
+
+        pushl %eax
+        pushl %ebx
+        pushl %ecx
+        pushl %edi
+
+        movl $0, %ebx
+        xorl %edi, %edi
+        movl 12(%ebp), %eax
+
+        cmp $1, argc
+        je set_argc_argv_epilogue
+
+        set_argc_argv_option_tokenize:
+            movl %eax, argv(, %edi, 4)
+
+            pushl %eax
+            pushl %ebx
+            push argv(, %edi, 4)
+            pushl $data_fmt
+            call printf
+            addl $8, %esp
+            popl %ebx
+            popl %eax
+
+            set_argc_argv_go_next:
+                inc %eax
+                movl (%eax), %ecx
+                andl $0xff, %ecx
+                cmp $0x0, %ecx
+            jne set_argc_argv_go_next
+
+            addl $2, %eax
+
+            inc %edi
+            inc %ebx
+            cmp argc, %ebx
+        jne set_argc_argv_option_tokenize
+
+        set_argc_argv_epilogue:
+            popl %edi
+            popl %ecx
+            popl %ebx
+            popl %eax
+    .endif
 
     movl %ebp, %esp
     popl %ebp
@@ -509,7 +595,12 @@ get_option: # get_option(option, default, is_boolean)
     subw $0xfffe, %cx
     neg %cx
 
-    movl argv, %edx
+    .ifndef _WIN32
+        movl argv, %edx
+    .else
+        xorl %edx, %edx
+        leal argv(, %edx, 4), %edx
+    .endif
 
     get_option_parse_args:
         pushl %edi
@@ -1235,3 +1326,21 @@ inspect_neighbourhood: # inspect_neighbourhood(EAX, EBX)
     movl %ebp, %esp
     popl %ebp
 ret
+
+.ifdef _WIN32
+    # HACK(Rafael): I hate this stupid conventions. God, what a mess...
+
+    .equ printf, _printf
+
+    .equ signal, _signal
+
+    .equ atoi, _atoi
+
+    .equ exit, _exit
+
+    .equ usleep, _sleep
+
+    .equ read, _read
+
+    .equ sprintf, _sprintf
+.endif
