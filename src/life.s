@@ -272,7 +272,8 @@ __progname:
         movl %esp, %ebp
         movl 4(%ebp), %ebx
         movl 8(%ebp), %ecx
-        #addl $4, %ecx # INFO(Rafael): We will parse one useless item, the argv[0] (is a nightmare getting it after on help printing).
+        # INFO(Rafael): We will parse one useless item, the argv[0] (is a nightmare getting it after on help printing).
+        #addl $4, %ecx
         pushl (%ecx)
         pushl 4(%ebp)
         call set_argc_argv
@@ -522,7 +523,8 @@ set_argc_argv: # set_argc_argv(argc, argv)
         movl 12(%ebp), %eax
         movl %eax, argv
     .else
-        #INFO(Rafael): Doing the Windows kernel programmer job.. :Z
+        # INFO(Rafael): Doing the Windows kernel programmer job.. :Z
+        #               ___crappy_getmainargs() sucks.. Just one more useless dependency that does obvious things.
 
         pushl %eax
         pushl %ebx
