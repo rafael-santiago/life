@@ -522,7 +522,7 @@ set_argc_argv: # set_argc_argv(argc, argv)
         movl 12(%ebp), %eax
         movl %eax, argv
     .else
-        #INFO(Rafael): Doing the windows kernel programmer job.. :Z
+        #INFO(Rafael): Doing the Windows kernel programmer job.. :Z
 
         pushl %eax
         pushl %ebx
@@ -538,15 +538,6 @@ set_argc_argv: # set_argc_argv(argc, argv)
 
         set_argc_argv_option_tokenize:
             movl %eax, argv(, %edi, 4)
-
-            pushl %eax
-            pushl %ebx
-            push argv(, %edi, 4)
-            pushl $data_fmt
-            call printf
-            addl $8, %esp
-            popl %ebx
-            popl %eax
 
             set_argc_argv_go_next:
                 inc %eax
