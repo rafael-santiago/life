@@ -3,7 +3,7 @@
 This repo is a minimalist implementation of the ``Conway's Game of Life`` in ``IA-32 Assembly`` using
 ``ANSI/TERM`` to handle the "graphic" stuff. Until now it was written to run on the following platforms:
 
-![Linux](https://github.com/rafael-santiago/life/blob/master/etc/small-tux.jpg "Linux") ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.jpg "FreeBSD") ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.jpg "OpenBSD") ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.jpg "NetBSD") ![MINIX](https://github.com/rafael-santiago/life/blob/master/etc/small-raccoon.jpg "MINIX") ![SOLARIS](https://github.com/rafael-santiago/life/blob/master/etc/small-solaris-sun.jpg "Solaris")
+![Linux](https://github.com/rafael-santiago/life/blob/master/etc/small-tux.jpg "Linux") ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.jpg "FreeBSD") ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.jpg "OpenBSD") ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.jpg "NetBSD") ![MINIX](https://github.com/rafael-santiago/life/blob/master/etc/small-raccoon.jpg "MINIX") ![SOLARIS](https://github.com/rafael-santiago/life/blob/master/etc/small-solaris-sun.jpg "Solaris") ![Windows](https://github.com/rafael-santiago/life/blob/master/etc/small-windows-logo.jpg "Windows... Sorry, I was not able to find any decent logo... It will be changed soon...")
 
 ## How to clone it?
 
@@ -18,7 +18,8 @@ Done.
 ## How to build it?
 
 I have written it using the ``GNU's Assembler`` (a.k.a ``gas``). You can use the build system or do it
-on your own (in this case my code is using the ``libc``).
+on your own (in this case my code is using the ``libc``). If you are on ``Windows`` is the
+``GCC`` is also needed because we use it to link, otherwise the linking would be much harder there.
 
 This tiny project uses my own [build system](https://github.com/rafael-santiago/hefesto). After following
 all steps to put ``hefesto`` to work on your system, you should "teach" your build system copy how to handle the
@@ -58,6 +59,12 @@ If you prefer/need to inform your dynamic loader path, try to use the option ``-
 you@SilvergunSuperman:~/src/life/src# hefesto --ld-path=/usr/libexec/ld-elf.so.1
 ```
 
+If you are having some problem related with the target architecture, you should try:
+
+```
+you@SilvergunSuperman:~/src/life/src# hefesto --address-model=32
+```
+
 ### I still prefer building it by myself...
 
 I think that ``ASSEMBLY`` people are not choosy, so build it by hand is pretty straightforward for them. Even so I took care
@@ -72,11 +79,12 @@ not intending to rewrite all the code stuff only for tan as... *BA DUM TSSS*... 
 
 **Table 1**: A thing that you probably already know.
 
-| **Platform**                                                                                       |    **SYMBOL**    |
-|:--------------------------------------------------------------------------------------------------:|:----------------:|
-| ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.jpg "FreeBSD")    |  ``__FreeBSD__`` |
-| ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.jpg "OpenBSD")      |  ``__OpenBSD__`` |
-| ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.jpg "NetBSD")  |  ``__NetBSD__``  |
+| **Platform**                                                                                                            |    **SYMBOL**    |
+|:-----------------------------------------------------------------------------------------------------------------------:|:----------------:|
+| ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.jpg "FreeBSD")                         |  ``__FreeBSD__`` |
+| ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.jpg "OpenBSD")                           |  ``__OpenBSD__`` |
+| ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.jpg "NetBSD")                       |  ``__NetBSD__``  |
+| ![Windows](https://github.com/rafael-santiago/life/blob/master/etc/small-windows-logo.jpg "Windows...")                 |  ``_WIN32``      | ¬¬ |
 
 Yes! The same macros that we commonly use when writing ``C`` programs... I love smart people!
 Always honoring the memory of a rebel monkey that came down from the tree and started all this shit... that's it! :)
@@ -92,7 +100,7 @@ you@SilvergunSuperman:~/src/life/src# hefesto --install
 ```
 
 If your ``UNIX-like`` has the directory ``/usr/games``, ``life`` will be installed there. On some ``UNIXes`` this directory
-is not exported, so you should call ``/usr/games/life`` instead of ``life``.
+is not exported, so you should call ``/usr/games/life`` instead of ``life``. On ``Windows`` it will be installed on ``C:\life``.
 
 If you want to uninstall:
 
@@ -118,6 +126,9 @@ at the **Table 2** to see more about these command line options.
 |``--board-size=n``         | Defines the size of the square shaped board. The values should be between ``2`` and ``45`` | ``life --board-size=10`` |
 |``--y,x.``        | Makes a cell under (y;x) coordinate alive | ``life --0,0.`` |
 | ``--no-ansi-term`` | Inhibits the usage of ``ANSI/TERM`` resources | ``life --no-ansi-term`` |
+
+On ``Windows`` is possible to get a colored output if you run the program from ``MSYS`` or ``Cygwin``. Still on ``Windows`` if you are
+using a normal command prompt, the program will detect it and use ``--no-ansi-term`` automatically, you do not have to worry about.
 
 Let's start with a block at the beginning of the board:
 
