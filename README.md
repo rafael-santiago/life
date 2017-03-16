@@ -117,7 +117,7 @@ at the **Table 2** to see more about these command line options.
 |``--generation-nr=n``      | Sets a limit for the game loop | ``life --generation=100`` |
 |``--board-size=n``         | Defines the size of the square shaped board. The values should be between ``2`` and ``45`` | ``life --board-size=10`` |
 |``--y,x.``        | Makes a cell under (y;x) coordinate alive | ``life --0,0.`` |
-| ``--no-ansi-term`` | Disables the usage of ``ANSI/TERM`` resources | ``life --no-ansi-term`` |
+| ``--no-ansi-term`` | Inhibits the usage of ``ANSI/TERM`` resources | ``life --no-ansi-term`` |
 
 Let's start with a block at the beginning of the board:
 

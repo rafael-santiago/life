@@ -643,31 +643,59 @@ get_option: # get_option(option, default, is_boolean)
     .endif
 
     get_option_parse_args:
-        pushl %edi
+        cmp $1, 16(%ebp)
+        jne get_option_parse_curr_arg
+
+        # INFO(Rafael): Only parses boolean options that are equals in length.
+
         pushl %ecx
+        pushl %edi
 
-        movl (%edx), %esi
+        movl (%edx), %edi
+        movl $0xffff, %ecx
+        movb $0, %al
+        cld
+        repne scasb
 
-        repe cmpsb
-
-        popl %ecx
         popl %edi
 
+        subw $0xfffe, %cx
+        neg %cx
+
+        movl %ecx, %ebx
+        popl %ecx
+
+        cmp %ecx, %ebx
         jne get_option_parse_args_go_next
 
-        cmp $1, 16(%ebp)
+        get_option_parse_curr_arg:
+            pushl %edi
+            pushl %ecx
 
-        je get_option_parse_args_set_boolean
+            movl (%edx), %esi
 
-        movl %esi, %eax
-        jmp get_option_epilogue
+            repe cmpsb
 
-        get_option_parse_args_set_boolean:
-            movl $1, %eax
+            movl %ecx, %ebx
+
+            popl %ecx
+            popl %edi
+
+            jne get_option_parse_args_go_next
+
+            cmp $1, 16(%ebp)
+
+            je get_option_parse_args_set_boolean
+
+            movl %esi, %eax
             jmp get_option_epilogue
 
-        get_option_parse_args_go_next:
-            addl $4, %edx
+            get_option_parse_args_set_boolean:
+                movl $1, %eax
+                jmp get_option_epilogue
+
+            get_option_parse_args_go_next:
+                addl $4, %edx
 
         cmp $0, (%edx)
     jne get_option_parse_args
