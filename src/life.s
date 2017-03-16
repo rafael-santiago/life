@@ -1118,7 +1118,7 @@ apply_rules: # apply_rules(EAX, EBX)
     pushl %edx
 
     # INFO(Rafael): Basically it traverses the cells inspecting the neighbours of each one and then applies
-    #                the game rules.
+    #               the game rules.
     #
     #                I think that use a kind of "temp_cells", "aux_cells" only to store the next generation data
     #                is quite useless and a waste of memory, due to it I have chosen to store the next generation
@@ -1477,7 +1477,7 @@ inspect_neighbourhood: # inspect_neighbourhood(EAX, EBX)
 ret
 
 .ifdef _WIN32
-    # HACK(Rafael): I hate these stupid conventions. Goddammit, what a mess that this OS push us to do!
+    # HACK(Rafael): I hate these stupid conventions. Goddammit, what a mess this OS push us to do!
 
     .equ printf, _printf
 
@@ -1492,4 +1492,6 @@ ret
     .equ read, _read
 
     .equ sprintf, _sprintf
+
+    .equ system, _system
 .endif

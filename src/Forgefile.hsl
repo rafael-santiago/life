@@ -52,6 +52,7 @@ life.prologue()
         $ldflags.add_item($dlinker);
     } else if (hefesto.sys.os_name() == "windows") {
         $cflags.add_item("-defsym _WIN32=1");
+        $cflags.add_item("-no-warn");
         $ldflags.del_item("-lc");
     }
 }
