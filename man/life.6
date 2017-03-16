@@ -11,7 +11,7 @@ The user should inform the initial state of the board through the command line.
 
 .SH OPTIONS
 .TP
-\-\-y,x.
+\-\-\fIy\fR,\fIx\fR.
 Defines an alive cell under the coordinate (y;x).
 
 .TP
@@ -41,6 +41,10 @@ The default is 200 milliseconds.
 \-\-generation-nr=\fIn\fR
 Defines the total of generations before exiting.
 The default is unlimited.
+
+.TP
+\-\-no-ansi-term
+Do not use any \fIANSI/TERM\fR resource.
 
 .SH EXIT STATUS
 The application always returns zero on normal conditions. On some error non-zero values are returned.

@@ -158,9 +158,15 @@ version:
 option_help:
     .asciz "--help"
 
+option_no_ansi_term:
+    .asciz "--no-ansi-term"
+
+no_ansi_term:
+    .int 0
+
 help:
     .ascii "use: %s [--interactive --alive-color=color --dead-color=color --board-size=n\n"
-    .ascii "                            --alive-n-n --delay=[millisecs] --generation-nr=n]\n\n"
+    .ascii "                            --alive-n-n --delay=[millisecs] --generation-nr=n --no-ansi-term]\n\n"
     .ascii " * You should try the command 'man life' in order to know how to live with those options listed in the usage "
     .ascii "line.\n\n"
     .ascii "life is licensed under GPLv2. This is a free software. Yes, your life is yours..or at least should be!\n"
@@ -217,6 +223,19 @@ __progname:
 
 .endif
 
+clear_string:
+    .ifndef _WIN32
+        .asciz "clear"
+    .else
+        .asciz "cls"
+    .endif
+
+noansi_alive_fmt:
+    .asciz "x"
+
+noansi_dead_fmt:
+    .asciz " "
+
 .section .bss
     .lcomm argc, 4
 
@@ -225,6 +244,12 @@ __progname:
     .endif
 
     .lcomm temp_str, 255
+
+    .lcomm clrscr, 4
+
+    .lcomm genprint, 4
+
+    .lcomm screen_buffer, (CELL_BYTES_PER_ROW * CELL_BYTES_PER_ROW)
 
 .section .text
 
@@ -397,6 +422,20 @@ __progname:
     .endif
     movl %eax, usleep_time
 
+    # INFO(Rafael): Getting the --no-ansi-term option.
+
+    pushl $1
+    pushl $0
+    pushl $option_no_ansi_term
+    call get_option
+    addl $12, %esp
+
+    cmp $1, %eax
+    je no_ansi_term_mode_switch
+
+    movl $ansi_clrscr, clrscr
+    movl $ansi_genprint, genprint
+
     # INFO(Rafael): Getting the --alive-color=color option.
 
     pushl $0
@@ -429,19 +468,22 @@ __progname:
     cmp $0, %eax
     je invalid_dead_color
 
-    # INFO(Rafael): Loading the initial generation defined by the user.
+    game_start:
 
-    call ld1stgen
-    call clrscr
-    call life
+        # INFO(Rafael): Loading the initial generation defined by the user.
 
-    call clrscr
-    pushl $sigint_watchdog_fmt
-    call printf
-    addl $4, %esp
+        call ld1stgen
+        call *clrscr
+        call life
 
-    movl $0, %eax
-    jmp bye
+        call *clrscr
+
+        pushl $sigint_watchdog_fmt
+        call printf
+        addl $4, %esp
+
+        movl $0, %eax
+        jmp bye
 
     show_version:
         pushl $version
@@ -461,6 +503,11 @@ __progname:
         addl $4, %esp
         movl $0, %eax
         jmp bye
+
+    no_ansi_term_mode_switch:
+        movl $noansi_clrscr, clrscr
+        movl $noansi_genprint, genprint
+        jmp game_start
 
     invalid_board_size:
         pushl $err_invalid_board_size
@@ -698,7 +745,7 @@ life: # life()
         cmp $1, quit_game
         je life_epilogue
 
-        call genprint
+        call *genprint
 
         cmp $1, interactive_mode
         je gameloop_enter_waiting
@@ -822,8 +869,8 @@ ldcolor: # ldcolor(addr color_fmt, color)
         popl %ebp
 ret
 
-.type clrscr, @function
-clrscr: # clrscr()
+.type ansi_clrscr, @function
+ansi_clrscr: # ansi_clrscr()
     pushl %ebp
     movl %esp, %ebp
 
@@ -835,6 +882,19 @@ clrscr: # clrscr()
     movl $2, %ebx
 
     call gotoxy
+
+    movl %ebp, %esp
+    popl %ebp
+ret
+
+.type noansi_clrscr, @function
+noansi_clrscr: # noansi_clrscr()
+    pushl %ebp
+    movl %esp, %ebp
+
+    pushl $clear_string
+    call system
+    addl $4, %esp
 
     movl %ebp, %esp
     popl %ebp
@@ -855,8 +915,8 @@ gotoxy: # gotoxy(EAX, EBX)
     popl %ebp
 ret
 
-.type genprint, @function
-genprint: # genprint()
+.type ansi_genprint, @function
+ansi_genprint: # ansi_genprint()
     #
     # INFO(Rafael): Well, it prints one generation.
     #
@@ -945,6 +1005,74 @@ genprint: # genprint()
     jle rloop
 
     popl %ecx
+
+    movl %ebp, %esp
+    popl %ebp
+ret
+
+.type noansi_genprint, @function
+noansi_genprint: # noansi_genprint()
+    pushl %ebp
+    movl %esp, %ebp
+
+    xorl %eax, %eax
+
+    # INFO(Rafael): Let's avoid several calls to printf and do it once.
+
+    movl $screen_buffer, %edi
+
+    movl $10, (%edi)
+    inc %edi
+
+    noansi_genprint_rloop:
+
+        movl (noansi_dead_fmt), %esi
+        movl %esi, (%edi)
+        inc %edi
+
+        xorl %ebx, %ebx
+
+        pushl %eax
+        imul $CELL_BYTES_PER_ROW, %eax
+
+        noansi_genprint_cloop:
+
+            movl cells(%eax, %ebx, 1), %ecx
+
+            cmp $1, %cl
+            jne noansi_genprint_dead
+
+            movl (noansi_alive_fmt), %esi
+            movl %esi, (%edi)
+            jmp noansi_genprint_inc
+
+            noansi_genprint_dead:
+                movl (noansi_dead_fmt), %esi
+                movl %esi, (%edi)
+
+            noansi_genprint_inc:
+                inc %edi
+                inc %ebx
+
+            cmp %ebx, cell_col_max
+        jne noansi_genprint_cloop
+
+        movl $10, (%edi)
+        inc %edi
+
+        popl %eax
+
+        inc %eax
+        cmp %eax, cell_row_max
+    jne noansi_genprint_rloop
+
+    movl $0, (%edi)
+
+    call noansi_clrscr
+
+    pushl $screen_buffer
+    call printf
+    addl $4, %esp
 
     movl %ebp, %esp
     popl %ebp
@@ -1321,7 +1449,7 @@ inspect_neighbourhood: # inspect_neighbourhood(EAX, EBX)
 ret
 
 .ifdef _WIN32
-    # HACK(Rafael): I hate this stupid conventions. God, what a mess...
+    # HACK(Rafael): I hate these stupid conventions. Goddammit, what a mess that this OS push us to do!
 
     .equ printf, _printf
 
