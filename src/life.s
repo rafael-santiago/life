@@ -223,6 +223,14 @@ __progname:
 
 .endif
 
+.ifdef _WIN32
+    on_bash:
+        .int 0
+
+    uname:
+        .asciz "uname"
+.endif
+
 clear_string:
     .ifndef _WIN32
         .asciz "clear"
@@ -422,6 +430,16 @@ noansi_dead_fmt:
     .endif
     movl %eax, usleep_time
 
+    .ifdef _WIN32
+        # INFO(Rafael): Are we on a msys, cygwin session?
+        pushl $uname
+        call system
+        addl $4, %esp
+        cmp $0, %eax
+        jne no_ansi_term_mode_switch
+        movl $1, on_bash
+    .endif
+
     # INFO(Rafael): Getting the --no-ansi-term option.
 
     pushl $1
@@ -469,6 +487,13 @@ noansi_dead_fmt:
     je invalid_dead_color
 
     game_start:
+
+        .ifdef _WIN32
+            cmp $1, on_bash
+            jne ldgen
+            movl $ansi_clrscr, clrscr
+            ldgen:
+        .endif
 
         # INFO(Rafael): Loading the initial generation defined by the user.
 
@@ -574,11 +599,9 @@ set_argc_argv: # set_argc_argv(argc, argv)
         #               ___crappy_getmainargs() sucks.. Just one more useless dependency that does obvious things.
 
         pushl %eax
-        pushl %ebx
         pushl %ecx
         pushl %edi
 
-        movl $0, %ebx
         xorl %edi, %edi
         movl 12(%ebp), %eax
 
@@ -598,14 +621,12 @@ set_argc_argv: # set_argc_argv(argc, argv)
             addl $2, %eax
 
             inc %edi
-            inc %ebx
-            cmp argc, %ebx
+            cmp argc, %edi
         jne set_argc_argv_option_tokenize
 
         set_argc_argv_epilogue:
             popl %edi
             popl %ecx
-            popl %ebx
             popl %eax
     .endif
 
@@ -1096,11 +1117,26 @@ noansi_genprint: # noansi_genprint()
 
     movl $0, (%edi)
 
-    call noansi_clrscr
+    .ifndef _WIN32
+        call noansi_clrscr
+    .else
+        call *clrscr
+    .endif
 
     pushl $screen_buffer
     call printf
     addl $4, %esp
+
+    .ifdef _WIN32
+        cmp $1, on_bash
+        jne noansi_genprint_epilogue
+
+        pushl $0
+        call fflush
+        addl $4, %esp
+
+        noansi_genprint_epilogue:
+    .endif
 
     movl %ebp, %esp
     popl %ebp
@@ -1494,4 +1530,6 @@ ret
     .equ sprintf, _sprintf
 
     .equ system, _system
+
+    .equ fflush, _fflush
 .endif
