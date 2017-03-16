@@ -183,12 +183,12 @@ To exit the program you should hit ``CTRL + c``. In some shell types you must co
 
 ## .*
 
-### Nice links related with the Conway's Game of Life
+### Nice links related with the Game of Life
 
 - [Conwaylife.com](http://www.conwaylife.com)
 - [A discussion of the Game of Life](http://web.stanford.edu/~cdebs/GameOfLife)
 - [Numberphile - Inventing Game of Life](https://www.youtube.com/watch?v=R9Plq-D1gEk)
-- [The Game of Life - a beginner's guide](https://www.theguardian.com/.../the-game-of-life-a-beginners-guide)
+- [The Game of Life - a beginner's guide](https://www.theguardian.com/science/alexs-adventures-in-numberland/2014/dec/15/the-game-of-life-a-beginners-guide)
 - [Logical Functions in the Game of Life](http://cogprints.org/4115/1/CollisionBasedRennard.pdf)
 - [John Conway Talks About the Game of Life](https://www.youtube.com/watch?v=FdMzngWchDk)
 - [John Conway - The Game of Life and Set Theory](https://www.youtube.com/watch?v=cQUAwhhC8cU)
