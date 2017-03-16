@@ -84,7 +84,7 @@ not intending to rewrite all the code stuff only for tan as... *BA DUM TSSS*... 
 | ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.jpg "FreeBSD")                         |  ``__FreeBSD__`` |
 | ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.jpg "OpenBSD")                           |  ``__OpenBSD__`` |
 | ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.jpg "NetBSD")                       |  ``__NetBSD__``  |
-| ![Windows](https://github.com/rafael-santiago/life/blob/master/etc/small-windows-logo.jpg "Windows...")                 |  ``_WIN32``      | ¬¬ |
+| ![Windows](https://github.com/rafael-santiago/life/blob/master/etc/small-windows-logo.jpg "Windows... ¬¬")              |  ``_WIN32``      |
 
 Yes! The same macros that we commonly use when writing ``C`` programs... I love smart people!
 Always honoring the memory of a rebel monkey that came down from the tree and started all this shit... that's it! :)
