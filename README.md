@@ -3,7 +3,7 @@
 This repo is a minimalist implementation of the ``Conway's Game of Life`` in ``IA-32 Assembly`` using
 ``ANSI/TERM`` to handle the "graphic" stuff. Until now it was written to run on the following platforms:
 
-![Linux](https://github.com/rafael-santiago/life/blob/master/etc/small-tux.jpg "Linux") ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.jpg "FreeBSD") ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.jpg "OpenBSD") ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.jpg "NetBSD") ![MINIX](https://github.com/rafael-santiago/life/blob/master/etc/small-raccoon.jpg "MINIX") ![SOLARIS](https://github.com/rafael-santiago/life/blob/master/etc/small-solaris-sun.jpg "Solaris") ![Windows](https://github.com/rafael-santiago/life/blob/master/etc/small-windows-logo.jpg "Windows... Sorry, I was not able to find any decent logo... It will be changed soon...")
+![Linux](https://github.com/rafael-santiago/life/blob/master/etc/small-tux.jpg "Linux") ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.jpg "FreeBSD") ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.jpg "OpenBSD") ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.jpg "NetBSD") ![MINIX](https://github.com/rafael-santiago/life/blob/master/etc/small-raccoon.jpg "MINIX") ![SOLARIS](https://github.com/rafael-santiago/life/blob/master/etc/small-solaris-sun.jpg "Solaris") ![Windows](https://github.com/rafael-santiago/life/blob/master/etc/small-windows-logo.jpg "Windows... Sorry! I was not able to find any decent logo!!! It will be changed soon...")
 
 ## How to clone it?
 
@@ -183,4 +183,12 @@ To exit the program you should hit ``CTRL + c``. In some shell types you must co
 
 ## .*
 
-*(((coming soon)))*
+### Nice links related with the Conway's Game of Life
+
+- [Conwaylife.com](http://www.conwaylife.com)
+- [A discussion of the Game of Life](http://web.stanford.edu/~cdebs/GameOfLife)
+- [Numberphile - Inventing Game of Life](https://www.youtube.com/watch?v=R9Plq-D1gEk)
+- [The Game of Life - a beginner's guide](https://www.theguardian.com/.../the-game-of-life-a-beginners-guide)
+- [Logical Functions in the Game of Life](http://cogprints.org/4115/1/CollisionBasedRennard.pdf)
+- [John Conway Talks About the Game of Life](https://www.youtube.com/watch?v=FdMzngWchDk)
+- [John Conway - The Game of Life and Set Theory](https://www.youtube.com/watch?v=cQUAwhhC8cU)
