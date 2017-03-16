@@ -120,7 +120,13 @@ local function install() : result type int {
     var dest_path type string;
     var bin_path type string;
 
-    if (isfile("../bin/life") == 0) {
+    if (hefesto.sys.os_name() != "windows") {
+        $bin_path = "../bin/life";
+    } else {
+        $bin_path = "..\\bin\\life.exe";
+    }
+
+    if (isfile($bin_path) == 0) {
         var exit_code type int;
         $exit_code = hefesto.sys.run("hefesto");
         if ($exit_code != 0) {
@@ -128,15 +134,20 @@ local function install() : result type int {
         }
     }
 
-    $bin_path = "../bin/life";
-    $dest_path = "/usr/games";
+    if (hefesto.sys.os_name() != "windows") {
+        $dest_path = "/usr/games";
 
-    if (isdir($dest_path) == 0) {
-        $dest_path = "/usr/local/bin";
-        mktree($dest_path); # INFO(Rafael): Usually even not existing it is "exported" by default on some *nix.
+        if (isdir($dest_path) == 0) {
+            $dest_path = "/usr/local/bin";
+            mktree($dest_path); # INFO(Rafael): Usually even not existing it is "exported" by default on some *nix.
+        }
+
+        $dest_path = hefesto.sys.make_path($dest_path, "life");
+    } else {
+        $dest_path = "c:\\life\\";
+        mktree($dest_path);
+        $dest_path = hefesto.sys.make_path($dest_path, "life.exe");
     }
-
-    $dest_path = hefesto.sys.make_path($dest_path, "life");
 
     if (isfile($dest_path)) {
         var options type list;
@@ -159,11 +170,13 @@ local function install() : result type int {
         result 1;
     }
 
-    mktree("/usr/local/man/man6");
+    if (hefesto.sys.os_name() != "windows") {
+        mktree("/usr/local/man/man6");
 
-    if (hefesto.sys.cp("../man/life.6", "/usr/local/man/man6/life.6") != 1) {
-        hefesto.sys.echo("WARN: Unable to copy the man page to '/usr/local/man/man6/life.6'.\n");
-        result 1;
+        if (hefesto.sys.cp("../man/life.6", "/usr/local/man/man6/life.6") != 1) {
+            hefesto.sys.echo("WARN: Unable to copy the man page to '/usr/local/man/man6/life.6'.\n");
+            result 1;
+        }
     }
 
     hefesto.sys.echo("INFO: Installed.\n");
@@ -187,9 +200,22 @@ local function uninstall() : result type int {
         result 1;
     }
 
-    hefesto.sys.rm("/usr/games/life");
-    hefesto.sys.rm("/usr/local/bin/life");
-    hefesto.sys.rm("/usr/local/man/man6/life.6");
+    if (hefesto.sys.os_name() != "windows") {
+        hefesto.sys.rm("/usr/games/life");
+        hefesto.sys.rm("/usr/local/bin/life");
+        hefesto.sys.rm("/usr/local/man/man6/life.6");
+    } else {
+        hefesto.sys.rm("c:\\life\\life.exe");
+        var cwd type string;
+        $cwd = hefesto.sys.pwd();
+        if (hefesto.sys.cd("C:\\life\\")) {
+            if (hefesto.sys.ls(".*") == 0) {
+                hefesto.sys.cd("..");
+                hefesto.sys.rmdir("C:\\life");
+            }
+            hefesto.sys.cd($cwd);
+        }
+    }
 
     hefesto.sys.echo("INFO: Uninstalled.\n");
 
