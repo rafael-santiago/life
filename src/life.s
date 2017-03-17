@@ -305,7 +305,7 @@ noansi_dead_fmt:
         movl %esp, %ebp
         movl 4(%ebp), %ebx
         movl 8(%ebp), %ecx
-        # INFO(Rafael): We will parse one useless item, the argv[0] (is a nightmare getting it after on help printing).
+        # INFO(Rafael): We will parse one useless item, the argv[0] (is a nightmare get it after on help printing).
         #addl $4, %ecx
         pushl (%ecx)
         pushl 4(%ebp)
@@ -314,7 +314,7 @@ noansi_dead_fmt:
         movl %edx, %ebp
     .endif
 
-    # INFO(Rafael): Branching to --version or --help sections if the user asked us.
+    # INFO(Rafael): Branching to --version or --help sections if the user has asked us.
 
     pushl $1
     pushl $0
@@ -596,7 +596,7 @@ set_argc_argv: # set_argc_argv(argc, argv)
         movl %eax, argv
     .else
         # INFO(Rafael): Doing the Windows kernel programmer job.. :Z
-        #               ___crappy_getmainargs() sucks.. Just one more useless dependency that does obvious things.
+        #               ___crappy_getmainargs() sucks.. Just one more useless dependency that does obvious things. No!
 
         pushl %eax
         pushl %ecx
@@ -1066,7 +1066,7 @@ noansi_genprint: # noansi_genprint()
 
     xorl %eax, %eax
 
-    # INFO(Rafael): Let's avoid several calls to printf and do it once.
+    # INFO(Rafael): Let's avoid several calls to printf doing it once.
 
     movl $screen_buffer, %edi
 
@@ -1156,13 +1156,13 @@ apply_rules: # apply_rules(EAX, EBX)
     # INFO(Rafael): Basically it traverses the cells inspecting the neighbours of each one and then applies
     #               the game rules.
     #
-    #                I think that use a kind of "temp_cells", "aux_cells" only to store the next generation data
-    #                is quite useless and a waste of memory, due to it I have chosen to store the next generation
-    #                data in the most significant nibble from the "cells", it still sucks but less.
+    #               I think that use a kind of "temp_cells", "aux_cells" only to store the next generation data
+    #               is quite useless and a waste of memory, due to it I have chosen to store the next generation
+    #               data in the most significant nibble from the "cells", it still sucks but less.
     #
-    #                So, the first (row;col) iteration generates a kind of "alternative world"... the second one
-    #                takes Alice (without Bob and Eva but with us) there by right shifting our current "brana"
-    #                4 bits. ;)
+    #               So, the first (row;col) iteration generates a kind of "alternative world"... the second one
+    #               takes Alice (without Bob and Eva but with us) there by right shifting our current "brana"
+    #               4 bits. ;)
 
     xorl %eax, %eax
 
@@ -1273,7 +1273,7 @@ inspect_neighbourhood: # inspect_neighbourhood(EAX, EBX)
     #                                           T T T
     #
     # Maybe this function could be improved to evalute only the enough to take some decision instead
-    # of visiting and counting all neighbours. By now it is okay.
+    # of visiting and counting all neighbours, but by now it is okay.
     #
 
     pushl %ebp
