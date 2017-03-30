@@ -11,10 +11,6 @@ Well, even being a pretty simple code (you should hallucinate better the next ti
 "hallucination" can dismistify a bunch of things if you are a "superstitious" programmer.
 But remember: it does not exist, it is just a bad trip... ¬¬
 
-As Mr. Stevie would say: *"superstition ain't the way..."*
-
-... boo!! ;)
-
 ## How to clone it?
 
 Pretty simple:
@@ -82,10 +78,8 @@ to write all this stuff in one single file (``src/life.s``). If you are on a pla
 your ``as`` (Ha-Ha) command the option ``-dsym SYMBOL=1``. In **Table 1** you can find the correct symbol to your current
 platform.
 
-AFAIK, on ``Solaris`` the ``as`` is related to its native assembler, due to it you should call ``gcc`` or ``"gas"``
-instead of using your good and old ``"as"``, *BA DUM TSSS* ... Now if you do not have the ``GNU Assembler`` installed on
-your ``Solaris`` box I would say that your system by now is out of gas... *BA DUM TSSS*... Anyway, install it because I am
-not intending to rewrite all the code stuff only for tan as... *BA DUM TSSS*... Horrible, well, getting back to **Table 1**...
+AFAIK, on ``Solaris`` the ``as`` is related to its native assembler, due to it you should call ``gcc`` or ``"gas"``.
+Of course, you should install the ``GNU Assembler`` if your ``Solaris`` is out of gas (duh!).
 
 **Table 1**: A thing that you probably already know.
 
