@@ -166,7 +166,7 @@ no_ansi_term:
 
 help:
     .ascii "use: %s [--interactive --alive-color=color --dead-color=color --board-size=n\n"
-    .ascii "                            --alive-n-n --delay=[millisecs] --generation-nr=n --no-ansi-term]\n\n"
+    .ascii "                            --n,n. --delay=[millisecs] --generation-nr=n --no-ansi-term]\n\n"
     .ascii " * You should try the command 'man life' in order to know how to live with those options listed in the usage "
     .ascii "line.\n\n"
     .ascii "life is licensed under GPLv2. This is a free software. Yes, your life is yours..or at least should be!\n"
@@ -198,7 +198,7 @@ __progname:
 
 .ifdef __OpenBSD__
     # INFO(Rafael): This tag identifies our binary as an OpenBSD ELF,
-    #               otherwise the nosy shell will try to interpret a binary. I hate it..
+    #               otherwise the nosy shell will try to interpret a binary.
 .section ".note.openbsd.ident", "a"
     .align 2
     .int 8
@@ -213,7 +213,7 @@ __progname:
 .ifdef __NetBSD__
 
 .section ".note.netbsd.ident", "a"
-     # INFO(Rafael): The same shit on NetBSD.
+     # INFO(Rafael): The same on NetBSD.
     .int 7
     .int 4
     .int 1
@@ -289,7 +289,7 @@ noansi_dead_fmt:
 
     .ifndef _WIN32
         # INFO(Rafael): Setting the argc and **argv to the related global variables used by get_option() function.
-        #               This is stupid and slower considering the context that we are in anyway I prefer doing it.
+        #               This is stupid and slower considering the context that we are, anyway I prefer doing it.
 
         movl %ebp, %edx
         movl %esp, %ebp
@@ -595,8 +595,7 @@ set_argc_argv: # set_argc_argv(argc, argv)
         movl 12(%ebp), %eax
         movl %eax, argv
     .else
-        # INFO(Rafael): Doing the Windows kernel programmer job.. :Z
-        #               ___crappy_getmainargs() sucks.. Just one more useless dependency that does obvious things. No!
+        # INFO(Rafael):  Not using getmainargs(), less one dependency that I really do not need. I prefer doing in the following way.
 
         pushl %eax
         pushl %ecx
@@ -1237,8 +1236,6 @@ apply_rules: # apply_rules(EAX, EBX)
     xorl %eax, %eax
     xorl %edx, %edx
 
-    # INFO(Rafael): The lair of the rabbit...
-
     apply_rules_rloop.1:
         xorl %ebx, %ebx
         pushl %eax
@@ -1513,7 +1510,7 @@ inspect_neighbourhood: # inspect_neighbourhood(EAX, EBX)
 ret
 
 .ifdef _WIN32
-    # HACK(Rafael): I hate these stupid conventions. Goddammit, what a mess this OS push us to do!
+    # HACK(Rafael): Workaround for Windows....
 
     .equ printf, _printf
 

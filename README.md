@@ -5,36 +5,32 @@ This repo is a minimalist implementation of the ``Conway's Game of Life`` in ``I
 
 ![Linux](https://github.com/rafael-santiago/life/blob/master/etc/small-tux.jpg "Linux") ![FreeBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-beastie.jpg "FreeBSD") ![OpenBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-puffy.jpg "OpenBSD") ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.jpg "NetBSD") ![MINIX](https://github.com/rafael-santiago/life/blob/master/etc/small-raccoon.jpg "MINIX") ![SOLARIS](https://github.com/rafael-santiago/life/blob/master/etc/small-solaris-sun.jpg "Solaris") ![Windows](https://github.com/rafael-santiago/life/blob/master/etc/small-windows-logo.jpg "Windows... Sorry! I am not able to find any decent logo!!! It will be changed soon...")
 
-According to some folktales, specially classroom tales, if you are seeing this repo you are hallucinating.
-Because these tales tell us that is impossible to build up any kind of portable ``ASSEMBLY`` code...
-Well, even being a pretty simple code (you should hallucinate better the next time) I think that this
-"hallucination" can dismistify a bunch of things if you are a "superstitious" programmer.
-But remember: it does not exist, it is just a bad trip... ¬¬
+This project is just a try of writing a multi-platform software in pure ASSEMBLY (fully functional) which takes advantage of LIBC.
 
 ## How to clone it?
 
 Pretty simple:
 
 ```
-you@SilvergunSuperman:~/src# git clone https://github.com/rafael-santiago/life life
+you@IA32BOX:~/src# git clone https://github.com/rafael-santiago/life life
 ```
 
 Done.
 
-## How to build it?
+## How can I build this software?
 
 I have built it using the ``GNU Assembler`` (a.k.a ``gas``). You can use the build system or do it
 on your own (in this case my code is using the ``libc``). If you are on ``Windows`` the
 ``MINGW`` is also needed because we use it to link, otherwise the linking would be much harder.
 
 This tiny project uses my own [build system](https://github.com/rafael-santiago/hefesto). After following
-all steps to make ``hefesto`` work on your system, you should "teach" your build system copy how to handle the
+all steps to make ``hefesto`` work in your system, you should "teach" your build system copy how to handle the
 ``GNU Assembler``. You need three commands:
 
 ```
-root@SilvergunSuperman:~/src# git clone https://github.com/rafael-santiago/helios helios
-root@SilvergunSuperman:~/src# cd helios
-root@SilvergunSuperman:~/src/helios# hefesto --install=gnu-asm-toolset
+root@IA32BOX:~/src# git clone https://github.com/rafael-santiago/helios helios
+root@IA32BOX:~/src# cd helios
+root@IA32BOX:~/src/helios# hefesto --install=gnu-asm-toolset
 ```
 
 Done.
@@ -45,8 +41,8 @@ After doing it your ``hefesto`` copy will know how to handle the assembler that 
 Now, inside your ``life`` copy, move to the ``src`` sub-directory and just call ``hefesto`` from there.
 
 ```
-you@SilvergunSuperman:~/src/life# cd src
-you@SilvergunSuperman:~/src/life/src# hefesto
+you@IA32BOX:~/src/life# cd src
+you@IA32BOX:~/src/life/src# hefesto
 ```
 
 An ``ELF`` called ``life`` will be created under the path ``../bin`` and that's it.
@@ -54,7 +50,7 @@ An ``ELF`` called ``life`` will be created under the path ``../bin`` and that's 
 If for some reason you are wanting a debug version of it:
 
 ```
-you@SilvergunSuperman:~/src/life/src# hefesto --compile-model=debug
+you@IA32BOX:~/src/life/src# hefesto --compile-model=debug
 ```
 
 ...and good luck! ;)
@@ -62,24 +58,23 @@ you@SilvergunSuperman:~/src/life/src# hefesto --compile-model=debug
 If you prefer/need to inform your dynamic loader path, try to use the option ``--ld-path`` when calling ``hefesto``:
 
 ```
-you@SilvergunSuperman:~/src/life/src# hefesto --ld-path=/usr/libexec/ld-elf.so.1
+you@IA32BOX:~/src/life/src# hefesto --ld-path=/usr/libexec/ld-elf.so.1
 ```
 
 If you are facing some problems related with the target architecture, you should try:
 
 ```
-you@SilvergunSuperman:~/src/life/src# hefesto --address-model=32
+you@IA32BOX:~/src/life/src# hefesto --address-model=32
 ```
 
 ### I still prefer building it by myself...
 
-I think that ``ASSEMBLY`` people are not choosy, so build it by hand is pretty straightforward for them. Even so I took care
+I think that ``ASSEMBLY`` people are not choosy, so build it by hand is pretty straightforward to them. Even so I took care
 to write all this stuff in one single file (``src/life.s``). If you are on a platform listed in **Table 1** you should add to
-your ``as`` (Ha-Ha) command the option ``-dsym SYMBOL=1``. In **Table 1** you can find the correct symbol to your current
+the ``as`` command line the option ``-dsym SYMBOL=1``. In **Table 1** you can find the correct symbol to your current
 platform.
 
 AFAIK, on ``Solaris`` the ``as`` is related to its native assembler, due to it you should call ``gcc`` or ``"gas"``.
-Of course, you should install the ``GNU Assembler`` if your ``Solaris`` is out of gas (duh!).
 
 **Table 1**: A thing that you probably already know.
 
@@ -90,17 +85,14 @@ Of course, you should install the ``GNU Assembler`` if your ``Solaris`` is out o
 | ![NetBSD](https://github.com/rafael-santiago/life/blob/master/etc/small-netbsd-flag.jpg "NetBSD")                       |  ``__NetBSD__``  |
 | ![Windows](https://github.com/rafael-santiago/life/blob/master/etc/small-windows-logo.jpg "Windows... ¬¬")              |  ``_WIN32``      |
 
-Yes! The same macros that we commonly use when writing ``C`` programs... I love smart people!
-Always honoring the memory of a rebel monkey that came down from the tree and started all this shit... that's it! :)
-
-I also love good conventions...
+Yes! The same macros that we commonly use when writing ``C`` programs... ;)
 
 ## How to install it?
 
 Being under the ``src`` sub-directory you should do the following:
 
 ```
-you@SilvergunSuperman:~/src/life/src# hefesto --install
+you@IA32BOX:~/src/life/src# hefesto --install
 ```
 
 If your ``UNIX-like`` has the directory ``/usr/games``, ``life`` will be installed there. On some ``UNIXes`` this directory
@@ -110,7 +102,7 @@ The path is not exported on ``Windows``, do it yourself (google about how to do 
 If you want to uninstall:
 
 ```
-you@SilvergunSuperman:~/src/life/src# hefesto --uninstall
+you@IA32BOX:~/src/life/src# hefesto --uninstall
 ```
 
 ## How to use it?
@@ -138,7 +130,7 @@ using a normal command prompt, the program will detect it and use ``--no-ansi-te
 Now let's see some practical command line samples... Let's start with a block at the beginning of the board:
 
 ```
-you@SilvergunSuperman:~/src/life/src# life --0,0. --0,1. \
+you@IA32BOX:~/src/life/src# life --0,0. --0,1. \
 > --1,0. --1,1.
 ```
 
@@ -146,7 +138,7 @@ A blinker, using the color ``magenta`` for the alive cells:
 
 
 ```
-you@SilvergunSuperman:~/src/life/src# life --2,1. \
+you@IA32BOX:~/src/life/src# life --2,1. \
 > --2,3. --2,4. --alive-color=magenta
 ```
 
@@ -166,7 +158,7 @@ The **Table 3** gathers famous patterns.
 For example, to produce the Pulsar oscillator in **Table 3**, I have used the following command line:
 
 ```
-you@SilvergunSuperman:~/src/life/src# life --2,4. --2,5. --2,6. \
+you@IA32BOX:~/src/life/src# life --2,4. --2,5. --2,6. \
 > --4,2. --5,2. --6,2. \
 > --4,7. --5,7. --6,7. \
 > --7,4. --7,5.  --7,6. \
