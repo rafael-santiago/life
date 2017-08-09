@@ -595,7 +595,8 @@ set_argc_argv: # set_argc_argv(argc, argv)
         movl 12(%ebp), %eax
         movl %eax, argv
     .else
-        # INFO(Rafael):  Not using getmainargs(), less one dependency that I really do not need. I prefer doing in the following way.
+        # INFO(Rafael):  Not using getmainargs(), less one dependency that I really do not need.
+        #                I prefer doing in the following way.
 
         pushl %eax
         pushl %ecx
