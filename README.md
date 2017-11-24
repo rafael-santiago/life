@@ -7,6 +7,8 @@ This repo is a minimalist implementation of the ``Conway's Game of Life`` in ``I
 
 This project is just a try of writing a multi-platform software in pure ASSEMBLY (fully functional) which takes advantage of LIBC.
 
+You can also find more details about some specific parts of this code in article for [BSD Magazine](https://bsdmag.org/download/freebsd-port-knocking).
+
 ## How to clone it?
 
 Pretty simple:
@@ -86,6 +88,20 @@ AFAIK, on ``Solaris`` the ``as`` is related to its native assembler, due to it y
 | ![Windows](https://github.com/rafael-santiago/life/blob/master/etc/small-windows-logo.jpg "Windows... ¬¬")              |  ``_WIN32``      |
 
 Yes! The same macros that we commonly use when writing ``C`` programs... ;)
+
+If everything else has failed when trying to compile it... Give a try with ``GCC``:
+
+```
+you@IA32BOX:~/src/life/src# gcc -nostartfiles life.s -olife
+```
+
+The command above should be executed in ``32-bit`` machines, for ``64-bit`` machines:
+
+```
+you@IA64BOX:~/src/life/src# gcc -m32 -nostartfiles life.s -olife
+```
+
+Yes, instead of using ``-dsym SYMBOL=1`` you should use ``-DSYMBOL=1`` when trying with ``GCC``.
 
 ## How to install it?
 
