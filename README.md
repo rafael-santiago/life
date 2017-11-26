@@ -7,7 +7,7 @@ This repo is a minimalist implementation of the ``Conway's Game of Life`` in ``I
 
 This project is just a try of writing a multi-platform software in pure ASSEMBLY (fully functional) which takes advantage of LIBC.
 
-You can also find more details about some specific parts of this code in article for [BSD Magazine](https://bsdmag.org/download/freebsd-port-knocking).
+You can also find more details about some specific parts of this code in my article for [BSD Magazine](https://bsdmag.org/download/freebsd-port-knocking).
 
 ## How to clone it?
 
